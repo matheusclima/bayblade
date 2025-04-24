@@ -18,14 +18,12 @@ export default function Home() {
             <Input placeholder="Buscar filmes ou pessoas..." className="pl-8" />
           </div>
           <div className="flex items-center gap-4">
-          <Button className="bg-rose-600 hover:bg-rose-700 cursor-pointer">Postar</Button>
-            {/* <Button asChild variant="ghost" size="sm">
-              <Link href="/explorar">Explorar</Link>
-            </Button> */}
-            {/* <Button asChild variant="ghost" size="sm">
-              <Link href="/notificacoes">Notificações</Link>
-            </Button> */}
-            <UserAvatar user={{ name: "Tralarero Tralala", image: "/placeholder.svg?height=32&width=32" }} className="w-8 h-8" />
+            <Link href="/create-post">
+              <Button className="bg-rose-600 hover:bg-rose-700 cursor-pointer">Postar</Button>
+            </Link>
+            <Link href="/perfil" className="cursor-pointer">
+              <UserAvatar user={{ name: "Tralarero Tralala", image: "/placeholder.svg?height=32&width=32" }} className="w-8 h-8" />
+            </Link>
           </div>
         </div>
       </header>
