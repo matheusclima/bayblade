@@ -1,103 +1,202 @@
-import Image from "next/image";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { MovieCard } from "@/components/movie-card"
+import { UserAvatar } from "@/components/user-avatar"
+import { Search } from "lucide-react"
+import { Input } from "@/components/ui/input"
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gray-50">
+      <header className="sticky top-0 z-10 bg-white border-b">
+        <div className="container flex items-center justify-between h-16 px-4 mx-auto">
+          <Link href="/" className="text-xl font-bold text-rose-600">
+            NextFilm
+          </Link>
+          <div className="relative w-full max-w-md mx-4">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Buscar filmes ou pessoas..." className="pl-8" />
+          </div>
+          <div className="flex items-center gap-4">
+            <Link href="/create-post">
+              <Button className="bg-rose-600 hover:bg-rose-700 cursor-pointer">Postar</Button>
+            </Link>
+            <Link href="/perfil" className="cursor-pointer">
+              <UserAvatar user={{ name: "Tralarero Tralala", image: "/placeholder.svg?height=32&width=32" }} className="w-8 h-8" />
+            </Link>
+          </div>
+        </div>
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <main className="container grid grid-cols-1 gap-6 px-4 py-6 mx-auto md:grid-cols-3 lg:grid-cols-4">
+        <div className="hidden md:block">
+          <div className="sticky top-20 space-y-4">
+            <div className="p-4 bg-white rounded-lg shadow">
+              <h2 className="mb-4 text-lg font-semibold">Seu Perfil</h2>
+              <div className="flex items-center gap-3 mb-4">
+                <UserAvatar
+                  user={{ name: "Tralarero", image: "/placeholder.svg?height=48&width=48" }}
+                  className="w-12 h-12"
+                />
+                <div>
+                  <p className="font-medium">Tralarero Tralala</p>
+                  <p className="text-sm text-muted-foreground">@tralalero</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-center">
+                <div>
+                  <p className="font-medium">245</p>
+                  <p className="text-xs text-muted-foreground">Seguidores</p>
+                </div>
+                <div>
+                  <p className="font-medium">123</p>
+                  <p className="text-xs text-muted-foreground">Seguindo</p>
+                </div>
+              </div>
+              <Button asChild className="w-full mt-4 bg-rose-600 hover:bg-rose-700 cursor-pointer
+" >
+                <Link href="/perfil">Ver perfil</Link>
+              </Button>
+            </div>
+
+            {/* <div className="p-4 bg-white rounded-lg shadow">
+              <h2 className="mb-4 text-lg font-semibold">Sugestões para seguir</h2>
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <UserAvatar
+                        user={{ name: `Usuário ${i}`, image: `/placeholder.svg?height=32&width=32` }}
+                        className="w-8 h-8"
+                      />
+                      <div>
+                        <p className="text-sm font-medium">Maria Oliveira</p>
+                        <p className="text-xs text-muted-foreground">@mariaoliveira</p>
+                      </div>
+                    </div>
+                    <Button size="sm" variant="outline">
+                      Seguir
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div> */}
+          </div>
+        </div>
+
+        <div className="col-span-1 space-y-6 md:col-span-2">
+          {/* <div className="p-4 bg-white rounded-lg shadow">
+            <div className="flex items-center gap-3 mb-4">
+              <UserAvatar
+                user={{ name: "Usuário", image: "/placeholder.svg?height=40&width=40" }}
+                className="w-10 h-10"
+              />
+              <Input placeholder="Compartilhe sua opinião sobre um filme..." />
+              <Button className="bg-rose-600 hover:bg-rose-700 cursor-pointer
+">Postar</Button>
+            </div>
+          </div> */}
+
+          <div className="space-y-6">
+            {[1, 2].map((post) => (
+              <div key={post} className="p-4 bg-white rounded-lg shadow">
+                <div className="flex items-center gap-3 mb-4">
+                  <UserAvatar
+                    user={{ name: `Usuário ${post}`, image: `/placeholder.svg?height=40&width=40` }}
+                    className="w-10 h-10"
+                  />
+                  <div>
+                    <p className="font-medium">Carlos Mendes</p>
+                    <p className="text-xs text-muted-foreground">Há 2 horas</p>
+                  </div>
+                </div>
+                <p className="mb-4">
+                  Acabei de assistir "Interestelar" pela terceira vez e continuo impressionado com a profundidade da
+                  história e os efeitos visuais. Christopher Nolan é um gênio! O que vocês acharam?
+                </p>
+                <div className="mb-4 overflow-hidden rounded-lg">
+                  <img
+                    src="/placeholder.svg?height=300&width=600"
+                    alt="Cena do filme"
+                    className="object-cover w-full h-64"
+                  />
+                </div>
+                <div className="flex gap-4 mb-4">
+                  <Button variant="ghost" size="sm">
+                    ❤️ 42 curtidas
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    💬 18 comentários
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    🔄 Compartilhar
+                  </Button>
+                </div>
+                <div className="pt-4 mt-4 border-t">
+                  <div className="mb-4 space-y-4">
+                    <div className="flex gap-2">
+                      <UserAvatar
+                        user={{ name: "Comentarista", image: "/placeholder.svg?height=32&width=32" }}
+                        className="w-8 h-8"
+                      />
+                      <div className="flex-1 p-2 bg-gray-100 rounded-lg">
+                        <p className="text-sm font-medium">Ana Souza</p>
+                        <p className="text-sm">
+                          Concordo totalmente! A trilha sonora do Hans Zimmer é simplesmente perfeita.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <UserAvatar
+                      user={{ name: "Você", image: "/placeholder.svg?height=32&width=32" }}
+                      className="w-8 h-8"
+                    />
+                    <Input placeholder="Escreva um comentário..." className="flex-1" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="hidden lg:block">
+          <div className="sticky top-20 space-y-4">
+            <div className="p-4 bg-white rounded-lg shadow">
+              <h2 className="mb-4 text-lg font-semibold">Filmes populares</h2>
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <MovieCard
+                    key={i}
+                    movie={{
+                      title: "Duna: Parte 2",
+                      image: "/placeholder.svg?height=120&width=80",
+                      year: "2024",
+                      rating: "4.8",
+                    }}
+                    compact
+                  />
+                ))}
+              </div>
+              <Button asChild className="w-full mt-4" variant="outline">
+                <Link href="/filmes">Ver mais filmes</Link>
+              </Button>
+            </div>
+
+            <div className="p-4 bg-white rounded-lg shadow">
+              <h2 className="mb-4 text-lg font-semibold">Categorias</h2>
+              <div className="flex flex-wrap gap-2">
+                {["Ação", "Drama", "Comédia", "Ficção", "Terror", "Romance", "Animação"].map((cat) => (
+                  <Button key={cat} variant="outline" size="sm" className="text-xs">
+                    {cat}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
-  );
+  )
 }
+

@@ -4,6 +4,7 @@
 @tailwind utilities;
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
