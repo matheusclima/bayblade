@@ -57,6 +57,10 @@ export interface Movie {
     vote_count: number;
 }
 
+export interface MovieData {
+    id: number;
+    results: Movie[];
+}
 export interface CastMember {
     cast_id: number;
     character: string; // Personagem que o ator interpreta
@@ -90,15 +94,15 @@ export interface MovieProvider {
     display_priority: number;
 }
 
-export interface MovieResultsBR {
+export interface MovieResults {
     link: string;
     ads: MovieProvider[];
     flatrate: MovieProvider[];
 }
 
-export interface MovieData {
+export interface MovieDataBR {
     id: number;
     results: {
-        BR: MovieResultsBR;
+        BR: MovieResults;
     };
 }

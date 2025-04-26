@@ -7,11 +7,11 @@ import { Checkbox } from "@/components/ui/checkbox"
 export default function LoginPage() {
   return (
     <div className="flex flex-col min-h-screen md:flex-row">
-      <div className="flex items-center justify-center flex-1 p-6 bg-white md:p-10">
-        <div className="w-full max-w-md space-y-6">
+      <div className="flex items-center justify-center flex-1 p-6 bg-gradient-to-br from-secodary/90 to-secondary/80 md:p-10">
+        <div className="w-full max-w-md space-y-6 border rounded-md py-10 px-6">
           <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold text-rose-600">NextFilm</h1>
-            <p className="text-gray-500">Sua rede social para amantes de cinema</p>
+            <p className="text-foreground">Sua rede social para amantes de cinema</p>
           </div>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -36,9 +36,9 @@ export default function LoginPage() {
             <Button className="w-full bg-rose-600 hover:bg-rose-700">Entrar</Button>
           </div>
           <div className="text-center">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-foreground">
               Não tem uma conta?{" "}
-              <Link href="/cadastro" className="text-rose-600 hover:underline">
+              <Link href="/cadastro" className="text-muted-foreground hover:underline">
                 Cadastre-se
               </Link>
             </p>
@@ -46,7 +46,7 @@ export default function LoginPage() {
         </div>
       </div>
       <div className="relative hidden flex-1 md:block">
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-500/80 to-rose-700/90" />
+        <div className="absolute inset-0 bg-gradient-to-bl from-rose-500/80 to-rose-700/90" />
         <div className="absolute inset-0 flex flex-col items-center justify-center p-10 text-white">
           <h2 className="mb-6 text-3xl font-bold text-center">Compartilhe sua paixão por filmes</h2>
           <ul className="space-y-4 text-center">

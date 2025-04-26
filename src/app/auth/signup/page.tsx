@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 export default function CadastroPage() {
   return (
     <div className="flex flex-col min-h-screen md:flex-row">
-      <div className="flex items-center justify-center flex-1 p-6 bg-white md:p-10">
+      <div className="flex items-center justify-center flex-1 p-6 bg-background border py-10 px-4 md:p-10">
         <div className="w-full max-w-md space-y-6">
           <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold text-rose-600">NextFilm</h1>
