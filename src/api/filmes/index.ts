@@ -1,4 +1,4 @@
-import { Movie, MovieCredits, MovieData } from "../../types/movie";
+import { Movie, MovieCredits, MovieData, MovieDataBR } from "../../types/movie";
 import tmdbApi from "..";
 
 export const getMovieById = async (id: number) => {
@@ -12,6 +12,11 @@ export const getMovieCredits = async (id: number) => {
 }
 
 export const getMovieProviders = async (id: number) => {
-    const response = await tmdbApi.get<MovieData>(`/movie/${id}/watch/providers?language=pt-BR`);
+    const response = await tmdbApi.get<MovieDataBR>(`/movie/${id}/watch/providers?language=pt-BR`);
+    return response.data;
+}
+
+export const getTrendingMoviesByPage = async (page: number) => {
+    const response = await tmdbApi.get<MovieData>(`https://api.themoviedb.org/3/movie/popular?language=pt-BR&page=${page}`);
     return response.data;
 }

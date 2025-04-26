@@ -220,7 +220,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 								<div className="p-4 bg-card rounded-lg shadow">
 									<h3 className="mb-4 text-lg font-semibold">Disponível em</h3>
 									<div className="space-y-4">
-										{movieProviders.results.BR.flatrate.map((provider) => (
+										{movieProviders.results.BR?.flatrate?.map((provider) => (
 											<div
 												key={provider.provider_id}
 												className="flex items-center justify-between p-3 border rounded-lg bg-muted"
