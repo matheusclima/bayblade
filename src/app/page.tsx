@@ -6,7 +6,6 @@ import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { getTrendingMoviesByPage } from '@/api/filmes';
-import CreatePost from '@/components/create-post';
 
 export default async function Home() {
 	const trendingMovies = await getTrendingMoviesByPage(1);
@@ -23,7 +22,6 @@ export default async function Home() {
 						<Input placeholder="Buscar filmes ou pessoas..." className="pl-8" />
 					</div>
 					<div className="flex items-center gap-4">
-						<CreatePost />
 						<Link href="/perfil" className="cursor-pointer">
 							<UserAvatar
 								user={{
@@ -71,45 +69,10 @@ export default async function Home() {
 								<Link href="/perfil">Ver perfil</Link>
 							</Button>
 						</div>
-
-						{/* <div className="p-4 bg-white rounded-lg shadow">
-              <h2 className="mb-4 text-lg font-semibold">Sugestões para seguir</h2>
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <UserAvatar
-                        user={{ name: `Usuário ${i}`, image: `/placeholder.svg?height=32&width=32` }}
-                        className="w-8 h-8"
-                      />
-                      <div>
-                        <p className="text-sm font-medium">Maria Oliveira</p>
-                        <p className="text-xs text-muted-foreground">@mariaoliveira</p>
-                      </div>
-                    </div>
-                    <Button size="sm" variant="outline">
-                      Seguir
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div> */}
 					</div>
 				</div>
 
 				<div className="col-span-1 space-y-6 md:col-span-2">
-					{/* <div className="p-4 bg-white rounded-lg shadow">
-            <div className="flex items-center gap-3 mb-4">
-              <UserAvatar
-                user={{ name: "Usuário", image: "/placeholder.svg?height=40&width=40" }}
-                className="w-10 h-10"
-              />
-              <Input placeholder="Compartilhe sua opinião sobre um filme..." />
-              <Button className="bg-rose-600 hover:bg-rose-700 cursor-pointer
-">Postar</Button>
-            </div>
-          </div> */}
-
 					<div className="space-y-6">
 						{[1, 2].map((post) => (
 							<div key={post} className="p-4 bg-card border rounded-lg shadow">

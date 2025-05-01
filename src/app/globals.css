@@ -139,3 +139,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .ProseMirror {
+    @apply h-[150px] text-base p-2 border break-normal overflow-y-scroll focus:outline-none
+  }
+}

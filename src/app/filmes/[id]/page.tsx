@@ -7,6 +7,7 @@ import { Bookmark, Heart, MessageSquare, Share2, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import * as dotenv from 'dotenv';
+import CreatePost from '@/components/create-post';
 dotenv.config();
 
 interface MoviePageProps {
@@ -112,7 +113,9 @@ export default async function MoviePage({ params }: MoviePageProps) {
 							</p>
 							<p className="mb-6 text-foreground">{movieInfo.overview}</p>
 							<div className="p-4 mb-6 bg-card rounded-lg">
-								<h3 className="mb-2 text-lg font-semibold text-card-foreground">Elenco</h3>
+								<h3 className="mb-2 text-lg font-semibold text-card-foreground">
+									Elenco
+								</h3>
 								<div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
 									{movieCredits.cast.slice(0, 6).map((actor) => (
 										<div key={actor.id} className="flex items-center gap-2">
@@ -150,7 +153,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 										<h3 className="text-lg font-semibold">
 											Avaliações dos usuários
 										</h3>
-										<Button>Escrever avaliação</Button>
+										<CreatePost />
 									</div>
 
 									<div className="space-y-6">

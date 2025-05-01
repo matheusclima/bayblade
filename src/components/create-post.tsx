@@ -1,5 +1,5 @@
 'use client';
-import { Film, Upload, X } from 'lucide-react';
+import { UploadIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import {
 	Dialog,
@@ -10,109 +10,85 @@ import {
 	DialogTrigger,
 } from './ui/dialog';
 import { Label } from './ui/label';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from './ui/select';
-import { Textarea } from './ui/textarea';
 import { Input } from './ui/input';
 import { DialogProps } from '@radix-ui/react-dialog';
+import TextEditor from './ui/text-editor';
+import { useState } from 'react';
+import { Rating } from './ui/rating';
 
 export default function CreatePost({ ...props }: DialogProps) {
+	const [file, setFile] = useState<File | null>(null);
+	const [rating, setRating] = useState<number>(0);
+	const [review, setReview] = useState<string>('');
+
+	const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+	}
+
 	return (
 		<Dialog {...props}>
 			<DialogTrigger asChild>
-				<Button className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
-          Postar
-				</Button>
+				<Button>Escrever avaliação</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Criar Post</DialogTitle>
+					<DialogTitle>Nova avaliação</DialogTitle>
 					<DialogDescription></DialogDescription>
 				</DialogHeader>
-				<form className="space-y-6">
-					<div className="space-y-4">
+				<form onSubmit={onSubmit} className="space-y-6">
+					<div className="space-y-6">
 						<div className="grid gap-2">
-							<Label htmlFor="movie-search">Buscar filme</Label>
-							<div className="relative">
-								<Input
-									id="movie-search"
-									placeholder="Digite o nome do filme..."
-								/>
-								<div className="absolute right-0 top-0 h-full flex items-center pr-3">
-									<Film className="w-5 h-5 text-card-foreground" />
-								</div>
-							</div>
+							<Label htmlFor="title">Título da avaliação</Label>
+							<Input id="title" />
 						</div>
 
 						<div className="grid gap-2">
-							<Label>Filme selecionado</Label>
-							<div className="flex items-start p-3 border rounded-lg">
-								<div className="w-16 h-24 bg-muted rounded mr-3 flex-shrink-0"></div>
-								<div className="flex-1">
-									<div className="flex justify-between">
-										<h3 className="font-medium">Duna: Parte 2</h3>
-										<Button variant="ghost" size="icon" className="h-6 w-6">
-											<X className="h-4 w-4" />
-										</Button>
-									</div>
-									<p className="text-sm text-gray-500">
-										2024 • Ficção científica • Denis Villeneuve
-									</p>
-								</div>
-							</div>
-						</div>
-
-						<div className="grid gap-2">
-							<Label htmlFor="rating">Avaliação</Label>
-							<Select defaultValue="5">
-								<SelectTrigger>
-									<SelectValue placeholder="Selecione uma avaliação" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="1">1 estrela</SelectItem>
-									<SelectItem value="2">2 estrelas</SelectItem>
-									<SelectItem value="3">3 estrelas</SelectItem>
-									<SelectItem value="4">4 estrelas</SelectItem>
-									<SelectItem value="5">5 estrelas</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
-
-						<div className="grid gap-2">
-							<Label htmlFor="content">Sua opinião sobre o filme</Label>
-							<Textarea
-								id="content"
-								placeholder="Compartilhe seus pensamentos sobre o filme..."
-								rows={6}
-							/>
+							<Label htmlFor="content">Descreva sua opinião</Label>
+							<TextEditor onChange={(value) => setReview(value)}/>
 						</div>
 
 						<div className="grid gap-2">
 							<Label>Adicionar imagem (opcional)</Label>
-							<div className="border border-dashed rounded-lg p-8 text-center">
-								<div className="flex flex-col items-center">
-									<Upload className="w-8 h-8 text-gray-400 mb-2" />
-									<p className="text-sm text-gray-500 mb-2">
-										Arraste uma imagem ou clique para fazer upload
-									</p>
-									<Button type='button' variant="outline" size="sm">
-										Escolher arquivo
-									</Button>
+							<div className="h-[200px] my-4 relative border border-dashed rounded-md">
+								<Input
+									type="file"
+									accept=".xlsx"
+									name="file"
+									className=" relative z-10 cursor-pointer h-full opacity-0"
+									// onChange={handleFileChange}
+									multiple={false}
+									required
+								/>
+								<div className="flex flex-col items-center text-center gap-2 w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none p-2">
+									<UploadIcon className="w-8 h-8 opacity-50 mb-4" />
+									<p className='text-sm'>{file ? `Importar ${file?.name}` : 'Importar imagem'}</p>
+									<span className='text-sm'>
+										{file
+											? `Confirme se o arquivo está correto e clique em importar.`
+											: 'Arraste ou clique aqui para importar uma imagem. O arquivo deve ter no máximo 5MB'}
+									</span>
 								</div>
 							</div>
 						</div>
 					</div>
 
+					<div className="grid gap-2 place-self-center">
+						<Label htmlFor="rating">Qual sua nota para o filme?</Label>
+						<Rating value={rating} onChange={(value) => setRating(value)} size='lg' />
+					</div>
+
 					<div className="flex justify-end space-x-2">
-						<Button type='button' variant="outline" onClick={() => props.onOpenChange?.(false)} >
-              Cancelar
+						<Button
+							type="button"
+							variant="outline"
+							onClick={() => props.onOpenChange?.(false)}
+						>
+							Cancelar
 						</Button>
-						<Button type='submit' className="bg-rose-500 hover:bg-rose-600 cursor-pointer">
+						<Button
+							type="submit"
+							className="bg-rose-500 hover:bg-rose-600 cursor-pointer"
+						>
 							Publicar
 						</Button>
 					</div>
