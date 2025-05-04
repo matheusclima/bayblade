@@ -177,7 +177,7 @@ export default async function Home() {
 								))}
 							</div>
 							<Button asChild className="w-full mt-4" variant="outline">
-								<Link href="/filmes">Ver mais filmes</Link>
+								<Link href="/explorar">Ver mais filmes</Link>
 							</Button>
 						</div>
 

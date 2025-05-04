@@ -5,10 +5,11 @@ import { Bold, Italic, Underline } from 'lucide-react';
 import UnderlineExtension from '@tiptap/extension-underline';
 
 type TextEditorProps = {
-	onChange: (value: string) => void;
+	onChange?: (value: string) => void;
+	name?: string;
 };
 
-export default function TextEditor({ onChange }: TextEditorProps) {
+export default function TextEditor({ onChange, name }: TextEditorProps) {
 	
 	const editor = useEditor({
 		extensions: [StarterKit, UnderlineExtension],
@@ -25,7 +26,7 @@ export default function TextEditor({ onChange }: TextEditorProps) {
 				editor.commands.setContent(`<p>${limitedText}</p>`);
 			}
 			const html = editor.getHTML();
-			onChange(html);
+			onChange?.(html);
 		},
 	});
 
@@ -64,7 +65,7 @@ export default function TextEditor({ onChange }: TextEditorProps) {
 			</div>
 
 			{/* Editor */}
-			<EditorContent editor={editor} />
+			<EditorContent name={name} editor={editor} />
 		</div>
 	);
 }
