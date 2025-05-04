@@ -3,6 +3,10 @@ export interface Genre {
     name: string;
 }
 
+export interface MovieGenre {
+    genres: Genre[];
+}
+
 export interface ProductionCompany {
     id: number;
     logo_path: string | null;
@@ -105,4 +109,12 @@ export interface MovieDataBR {
     results: {
         BR: MovieResults;
     };
+}
+
+export interface MovieFilters {
+    language?: string;
+    sort_by?: string;
+    with_genres?: string; // ids separados por vírgula
+    year?: number;
+    query?: string; // se quiser buscar pelo nome do filme
 }

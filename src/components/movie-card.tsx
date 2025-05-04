@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Star } from 'lucide-react';
 import Image from 'next/image';
-import { imageBaseUrl } from '@/constants';
+import { tmdbImageUrl } from '@/constants';
 
 interface Movie {
 	id: number;
@@ -24,7 +24,7 @@ export function MovieCard({ movie, compact = false }: MovieCardProps) {
 				className="flex items-start gap-3 group"
 			>
 				<Image
-					src={`${imageBaseUrl}${movie.image}` || '/placeholder.svg'}
+					src={`${tmdbImageUrl}${movie.image}` || '/placeholder.svg'}
 					alt={movie.title}
 					width={64}
 					height={96}
@@ -53,7 +53,7 @@ export function MovieCard({ movie, compact = false }: MovieCardProps) {
 		>
 			<div className="relative">
 				<Image
-					src={`${imageBaseUrl}${movie.image}` || '/placeholder.svg'}
+					src={`${tmdbImageUrl}${movie.image}` || '/placeholder.svg'}
 					alt={movie.title}
 					className="object-cover w-full aspect-[2/3]"
 					width={300}

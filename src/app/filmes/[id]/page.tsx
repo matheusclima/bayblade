@@ -3,11 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UserAvatar } from '@/components/ui/user-avatar';
-import { Bookmark, Heart, MessageSquare, Share2, Star } from 'lucide-react';
+import { Bookmark, Heart, Share2, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import * as dotenv from 'dotenv';
 import CreatePost from '@/components/create-post';
+import MovieReviews from './review';
+import { tmdbImageUrl } from '@/constants';
 dotenv.config();
 
 interface MoviePageProps {
@@ -15,7 +17,6 @@ interface MoviePageProps {
 		id: number;
 	};
 }
-const imageUrl = process.env.IMAGE_URL;
 
 export default async function MoviePage({ params }: MoviePageProps) {
 	const { id } = await params;
@@ -58,7 +59,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 						<div className="sticky top-24">
 							<div className="overflow-hidden bg-card rounded-lg shadow">
 								<Image
-									src={`${imageUrl}${movieInfo.poster_path}`}
+									src={`${tmdbImageUrl}${movieInfo.poster_path}`}
 									alt="Poster do filme"
 									width={300}
 									height={450}
@@ -120,7 +121,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 									{movieCredits.cast.slice(0, 6).map((actor) => (
 										<div key={actor.id} className="flex items-center gap-2">
 											<Image
-												src={`${imageUrl}${actor.profile_path}`}
+												src={`${tmdbImageUrl}${actor.profile_path}`}
 												alt={actor.name}
 												width={40}
 												height={40}
@@ -156,67 +157,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 										<CreatePost />
 									</div>
 
-									<div className="space-y-6">
-										{[1, 2, 3].map((review) => (
-											<div
-												key={review}
-												className="pb-4 border-b last:border-0 last:pb-0"
-											>
-												<div className="flex items-start gap-3 mb-2">
-													<UserAvatar
-														user={{
-															name: `Usuário ${review}`,
-															image: `/placeholder.svg?height=40&width=40`,
-														}}
-														className="w-10 h-10"
-													/>
-													<div className="flex-1">
-														<div className="flex items-center justify-between">
-															<div>
-																<p className="font-medium">Maria Oliveira</p>
-																<p className="text-xs text-muted-foreground">
-																	Há 5 dias
-																</p>
-															</div>
-															<div className="flex items-center gap-1">
-																<Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-																<Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-																<Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-																<Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-																<Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-															</div>
-														</div>
-														<h4 className="mt-2 mb-1 font-medium">
-															Uma obra-prima visual e narrativa
-														</h4>
-														<p className="text-sm text-muted-foreground/90">
-															Denis Villeneuve entrega uma continuação à altura
-															do primeiro filme. A cinematografia é de tirar o
-															fôlego, as atuações são impecáveis e a história é
-															contada com maestria. Uma experiência
-															cinematográfica completa.
-														</p>
-														<div className="flex gap-4 mt-2">
-															<Button
-																variant="ghost"
-																size="sm"
-																className="text-xs"
-															>
-																<Heart className="w-3 h-3 mr-1" /> 42
-															</Button>
-															<Button
-																variant="ghost"
-																size="sm"
-																className="text-xs"
-															>
-																<MessageSquare className="w-3 h-3 mr-1" /> 5
-															</Button>
-														</div>
-													</div>
-												</div>
-											</div>
-										))}
-									</div>
+									<MovieReviews id={id}/>
 								</div>
 							</TabsContent>
 							<TabsContent value="onde-assistir" className="space-y-6">
@@ -230,7 +171,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 											>
 												<div className="flex items-center gap-3">
 													<Image
-														src={`${imageUrl}${provider.logo_path}`}
+														src={`${tmdbImageUrl}${provider.logo_path}`}
 														alt={provider.provider_name}
 														width={40}
 														height={40}
