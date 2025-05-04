@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // 1. Schema de validação com Zod
 const signUpSchema = z
@@ -31,6 +33,8 @@ const signUpSchema = z
 type SignUpData = z.infer<typeof signUpSchema>;
 
 export default function SignUpPage() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -43,11 +47,7 @@ export default function SignUpPage() {
   });
 
   const onSubmit = async (data: SignUpData) => {
-    console.log("Dados validados:", data);
-
     try {
-      const result = signUpSchema.parse(data);
-      console.log("Dados validados com Zod:", result);
       const response = await fetch("http://localhost:6500/users", {
         method: "POST",
         headers: {
@@ -61,12 +61,21 @@ export default function SignUpPage() {
           senha: data.password,
         }),
       });
+
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error("Erro ao criar conta");
+        throw new Error(result.message || "Erro ao criar conta");
       }
-      console.log("Conta criada com sucesso!");
-    } catch (error) {
-      console.error("Erro ao criar conta:", error);
+
+      toast.success(result.message || "Conta criada com sucesso!", {
+        duration: 2000,
+        onAutoClose: () => {
+          router.push("/auth/signin");
+        },
+      });
+    } catch (error: any) {
+      toast.error(error.message || "Erro desconhecido ao criar conta.");
     }
   };
 
