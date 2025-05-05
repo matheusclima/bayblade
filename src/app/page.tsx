@@ -6,9 +6,13 @@ import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { getTrendingMoviesByPage } from '@/api/filmes';
+import api from '@/api/api';
+import { Review } from '@/types/post';
+import { howManyDaysAgo } from '@/lib/utils';
 
 export default async function Home() {
 	const trendingMovies = await getTrendingMoviesByPage(1);
+	const { data: posts } = await api.get<Review[]>('/posts');
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -74,45 +78,48 @@ export default async function Home() {
 
 				<div className="col-span-1 space-y-6 md:col-span-2">
 					<div className="space-y-6">
-						{[1, 2].map((post) => (
-							<div key={post} className="p-4 bg-card border rounded-lg shadow">
+						{posts.map((post) => (
+							<div
+								key={post.id}
+								className="p-4 bg-card border rounded-lg shadow"
+							>
 								<div className="flex items-center gap-3 mb-4">
 									<UserAvatar
 										user={{
-											name: `Usuário ${post}`,
+											name: `${post.user.nome} ${post.user.sobrenome}`,
 											image: `/placeholder.svg?height=40&width=40`,
 										}}
 										className="w-10 h-10"
 									/>
 									<div>
-										<p className="font-medium">Carlos Mendes</p>
-										<p className="text-xs text-muted-foreground">Há 2 horas</p>
+										<p className="font-medium">{`${post.user.nome} ${post.user.sobrenome}`}</p>
+										<p className="text-xs text-muted-foreground">
+											Há {howManyDaysAgo(new Date(post.createdAt))} dia(s)
+										</p>
 									</div>
 								</div>
-								<p className="mb-4">
-									Acabei de assistir &quot;Interestelar&quot; pela terceira vez
-									e continuo impressionado com a profundidade da história e os
-									efeitos visuais. Christopher Nolan é um gênio! O que vocês
-									acharam?
-								</p>
+								<div
+									dangerouslySetInnerHTML={{
+										__html: post.descricao,
+									}}
+								/>
 								<div className="mb-4 overflow-hidden rounded-lg">
-									<Image
-										src="/placeholder.svg?height=300&width=600"
-										alt="Cena do filme"
-										className="object-cover w-full h-64"
-										width={600}
-										height={300}
-									/>
+									{post.imageUrl && (
+										<Image
+											src={post.imageUrl}
+											alt="Cena do filme"
+											className="object-cover w-full h-64"
+											width={600}
+											height={300}
+										/>
+									)}
 								</div>
 								<div className="flex gap-4 mb-4">
 									<Button variant="ghost" size="sm">
-										❤️ 42 curtidas
+										❤️ {post.curtidas} curtidas
 									</Button>
 									<Button variant="ghost" size="sm">
 										💬 18 comentários
-									</Button>
-									<Button variant="ghost" size="sm">
-										🔄 Compartilhar
 									</Button>
 								</div>
 								<div className="pt-4 mt-4 border-t">

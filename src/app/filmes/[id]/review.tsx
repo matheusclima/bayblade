@@ -8,7 +8,6 @@ import { Heart, MessageSquare } from 'lucide-react';
 
 export default async function MovieReviews({ id }: { id: number }) {
 	const { data: reviews } = await api.get<Review[]>(`/posts/movies/${id}`);
-  console.log(reviews);
 	return (
 		<div className="space-y-6">
 			{reviews.map((review) => (

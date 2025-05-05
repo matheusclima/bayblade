@@ -1,8 +1,10 @@
 'use client';
+
 import { UploadIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import {
 	Dialog,
+	DialogClose,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
@@ -35,7 +37,7 @@ export default function CreatePost({ ...props }: DialogProps) {
 		formData.append('curtidas', '0'); // valor inicial, ajuste se necessário
 		formData.append('user_id', 'e7ce4deb-b347-4131-b537-c2a6edbc5f85'); // substitua pelo valor real
 		formData.append('filme_id', movieId);
-
+		
 		try {
 			const response = await api.post('/posts', formData, {
 				headers: {
@@ -70,7 +72,7 @@ export default function CreatePost({ ...props }: DialogProps) {
 							<Label htmlFor="title">Título da avaliação</Label>
 							<Input
 								id="title"
-								name='titulo'
+								name="titulo"
 								value={title}
 								onChange={(e) => setTitle(e.target.value)}
 							/>
@@ -78,7 +80,10 @@ export default function CreatePost({ ...props }: DialogProps) {
 
 						<div className="grid gap-2">
 							<Label htmlFor="content">Descreva sua opinião</Label>
-							<TextEditor name='descricao' onChange={(value) => setReview(value)} />
+							<TextEditor
+								name="descricao"
+								onChange={(value) => setReview(value)}
+							/>
 						</div>
 
 						<div className="grid gap-2">
@@ -116,13 +121,15 @@ export default function CreatePost({ ...props }: DialogProps) {
 					</div>
 
 					<div className="flex justify-end space-x-2">
-						<Button
-							type="button"
-							variant="outline"
-							onClick={() => props.onOpenChange?.(false)}
-						>
-							Cancelar
-						</Button>
+						<DialogClose asChild>
+							<Button
+								type="button"
+								variant="outline"
+								onClick={() => props.onOpenChange?.(false)}
+							>
+								Cancelar
+							</Button>
+						</DialogClose>
 						<Button
 							type="submit"
 							className="bg-rose-500 hover:bg-rose-600 cursor-pointer"
