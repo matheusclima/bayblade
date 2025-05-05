@@ -10,6 +10,7 @@ import * as dotenv from 'dotenv';
 import CreatePost from '@/components/create-post';
 import MovieReviews from './review';
 import { tmdbImageUrl } from '@/constants';
+import { cookies } from 'next/headers';
 dotenv.config();
 
 interface MoviePageProps {
@@ -23,6 +24,8 @@ export default async function MoviePage({ params }: MoviePageProps) {
 	const movieInfo = await getMovieById(id);
 	const movieCredits = await getMovieCredits(id);
 	const movieProviders = await getMovieProviders(id);
+	const cookieStore = await cookies();
+	const accessToken = cookieStore.get('nextfilm_access_token')?.value;
 
 	const director = movieCredits.crew.find(
 		(member) => member.job === 'Director'
@@ -154,10 +157,15 @@ export default async function MoviePage({ params }: MoviePageProps) {
 										<h3 className="text-lg font-semibold">
 											Avaliações dos usuários
 										</h3>
-										<CreatePost />
+										{accessToken ? (
+											<CreatePost />
+										) : (
+											<Link href="/auth/signin">
+												<Button>Escrever avaliação</Button>
+											</Link>
+										)}
 									</div>
-
-									<MovieReviews id={id}/>
+									<MovieReviews id={id} />
 								</div>
 							</TabsContent>
 							<TabsContent value="onde-assistir" className="space-y-6">

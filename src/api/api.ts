@@ -7,7 +7,8 @@ const api =  axios.create({
     headers: {
         'Content-Type': 'application/json;charset=utf-8',
         'Accept': 'application/json',
-    }
+    },
+    withCredentials: true,
 })
 
 export default api

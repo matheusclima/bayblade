@@ -1,21 +1,23 @@
-"use client";
-import { UploadIcon } from "lucide-react";
-import { Button } from "./ui/button";
+'use client';
+
+import { UploadIcon } from 'lucide-react';
+import { Button } from './ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { DialogProps } from "@radix-ui/react-dialog";
-import TextEditor from "./ui/text-editor";
-import { useState } from "react";
-import { Rating } from "./ui/rating";
-import api from "@/api/api";
-import { useParams } from "next/navigation";
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from './ui/dialog';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+import { DialogProps } from '@radix-ui/react-dialog';
+import TextEditor from './ui/text-editor';
+import { useState } from 'react';
+import { Rating } from './ui/rating';
+import api from '@/api/api';
+import { useParams } from 'next/navigation';
 
 export default function CreatePost({ ...props }: DialogProps) {
   const [title, setTitle] = useState<string>("");
@@ -29,19 +31,19 @@ export default function CreatePost({ ...props }: DialogProps) {
 
     if (!movieId) return;
 
-    const formData = new FormData(e.currentTarget);
-    formData.append("descricao", review);
-    formData.append("avaliacao", rating.toString());
-    formData.append("curtidas", "0"); // valor inicial, ajuste se necessário
-    formData.append("user_id", "e2bc0836-8fab-4aba-a3bb-1a1b8b0309bd"); // substitua pelo valor real
-    formData.append("filme_id", movieId);
-
-    try {
-      const response = await api.post("/posts", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+		const formData = new FormData(e.currentTarget);
+		formData.append('descricao', review);
+		formData.append('avaliacao', rating.toString());
+		formData.append('curtidas', '0'); // valor inicial, ajuste se necessário
+		formData.append('user_id', 'e7ce4deb-b347-4131-b537-c2a6edbc5f85'); // substitua pelo valor real
+		formData.append('filme_id', movieId);
+		
+		try {
+			const response = await api.post('/posts', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+			});
 
       if (response.status !== 201) {
         throw new Error("Erro ao enviar post");
@@ -55,34 +57,34 @@ export default function CreatePost({ ...props }: DialogProps) {
     }
   };
 
-  return (
-    <Dialog {...props}>
-      <DialogTrigger asChild>
-        <Button>Escrever avaliação</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Nova avaliação</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={onSubmit} className="space-y-6">
-          <div className="space-y-6">
-            <div className="grid gap-2">
-              <Label htmlFor="title">Título da avaliação</Label>
-              <Input
-                id="title"
-                name="titulo"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
+	return (
+		<Dialog {...props}>
+			<DialogTrigger asChild>
+				<Button>Escrever avaliação</Button>
+			</DialogTrigger>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Nova avaliação</DialogTitle>
+				</DialogHeader>
+				<form onSubmit={onSubmit} className="space-y-6">
+					<div className="space-y-6">
+						<div className="grid gap-2">
+							<Label htmlFor="title">Título da avaliação</Label>
+							<Input
+								id="title"
+								name="titulo"
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+							/>
+						</div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="content">Descreva sua opinião</Label>
-              <TextEditor
-                name="descricao"
-                onChange={(value) => setReview(value)}
-              />
-            </div>
+						<div className="grid gap-2">
+							<Label htmlFor="content">Descreva sua opinião</Label>
+							<TextEditor
+								name="descricao"
+								onChange={(value) => setReview(value)}
+							/>
+						</div>
 
             <div className="grid gap-2">
               <Label>Adicionar imagem (opcional)</Label>
@@ -118,23 +120,25 @@ export default function CreatePost({ ...props }: DialogProps) {
             />
           </div>
 
-          <div className="flex justify-end space-x-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => props.onOpenChange?.(false)}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              className="bg-rose-500 hover:bg-rose-600 cursor-pointer"
-            >
-              Publicar
-            </Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
+					<div className="flex justify-end space-x-2">
+						<DialogClose asChild>
+							<Button
+								type="button"
+								variant="outline"
+								onClick={() => props.onOpenChange?.(false)}
+							>
+								Cancelar
+							</Button>
+						</DialogClose>
+						<Button
+							type="submit"
+							className="bg-rose-500 hover:bg-rose-600 cursor-pointer"
+						>
+							Publicar
+						</Button>
+					</div>
+				</form>
+			</DialogContent>
+		</Dialog>
+	);
 }
