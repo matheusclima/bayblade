@@ -9,10 +9,15 @@ import { getTrendingMoviesByPage } from '@/api/filmes';
 import api from '@/api/api';
 import { Review } from '@/types/post';
 import { howManyDaysAgo } from '@/lib/utils';
+import { cookies } from 'next/headers';
+import { getUserFromCookies } from '@/lib/getUserFromCookies';
+
 
 export default async function Home() {
 	const trendingMovies = await getTrendingMoviesByPage(1);
 	const { data: posts } = await api.get<Review[]>('/posts');
+	const user = await getUserFromCookies();
+
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -29,7 +34,7 @@ export default async function Home() {
 						<Link href="/perfil" className="cursor-pointer">
 							<UserAvatar
 								user={{
-									name: 'Tralarero Tralala',
+									name: user ? `${user?.nome} ${user?.sobrenome}` : 'Tralarero Tralala',
 									image: '/placeholder.svg?height=32&width=32',
 								}}
 								className="w-8 h-8"
@@ -42,39 +47,58 @@ export default async function Home() {
 			<main className="container grid grid-cols-1 gap-6 px-4 py-6 mx-auto md:grid-cols-3 lg:grid-cols-4">
 				<div className="hidden md:block">
 					<div className="sticky top-20 space-y-4">
-						<div className="p-4 bg-card border rounded-lg shadow">
-							<h2 className="mb-4 text-lg text-card-foreg font-semibold">
-								Seu Perfil
-							</h2>
-							<div className="flex items-center gap-3 mb-4">
-								<UserAvatar
-									user={{
-										name: 'Tralarero',
-										image: '/placeholder.svg?height=48&width=48',
-									}}
-									className="w-12 h-12"
-								/>
-								<div>
-									<p className="font-medium">Tralarero Tralala</p>
-									<p className="text-sm text-muted-foreground">@tralalero</p>
+						{user ? (
+							<div className="p-4 bg-card border rounded-lg shadow">
+								<h2 className="mb-4 text-lg text-card-foreg font-semibold">
+									Seu Perfil
+								</h2>
+								<div className="flex items-center gap-3 mb-4">
+									<UserAvatar
+										user={{
+											name: `${user.nome} ${user.sobrenome}`,
+											image: '/placeholder.svg?height=48&width=48',
+										}}
+										className="w-12 h-12"
+									/>
+									<div>
+										<p className="font-medium">{`${user.nome} ${user.sobrenome}`}</p>
+										<p className="text-sm text-muted-foreground">@{user.usuario}</p>
+									</div>
 								</div>
+								<div className="grid grid-cols-2 gap-2 text-center">
+									<div>
+										<p className="font-medium">245</p>
+										<p className="text-xs text-muted-foreground">Seguidores</p>
+									</div>
+									<div>
+										<p className="font-medium">123</p>
+										<p className="text-xs text-muted-foreground">Seguindo</p>
+									</div>
+								</div>
+								<Link href="/perfil">
+								<Button className="w-full mt-4 bg-rose-600 hover:bg-rose-700 cursor-pointer">
+									Ver perfil
+								</Button>
+								</Link>
 							</div>
-							<div className="grid grid-cols-2 gap-2 text-center">
-								<div>
-									<p className="font-medium">245</p>
-									<p className="text-xs text-muted-foreground">Seguidores</p>
-								</div>
-								<div>
-									<p className="font-medium">123</p>
-									<p className="text-xs text-muted-foreground">Seguindo</p>
-								</div>
+						) : (
+							<div className="p-4 bg-card border rounded-lg shadow text-center">
+								<h2 className="mb-2 text-lg font-semibold text-card-foreg">
+									Faça login para uma melhor experiência
+								</h2>
+								<p className="mb-4 text-sm text-muted-foreground">
+									Acesse sua conta para visualizar seu perfil e interagir com a comunidade.
+								</p>
+								<Link href="/auth/signin">
+								<Button className="w-full bg-rose-600 hover:bg-rose-700 cursor-pointer">
+									Login
+								</Button>
+								</Link>
 							</div>
-							<Button className="w-full mt-4 bg-rose-600 hover:bg-rose-700 cursor-pointer">
-								<Link href="/perfil">Ver perfil</Link>
-							</Button>
-						</div>
+						)}
 					</div>
 				</div>
+
 
 				<div className="col-span-1 space-y-6 md:col-span-2">
 					<div className="space-y-6">
