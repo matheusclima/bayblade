@@ -36,7 +36,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 			<header className="sticky top-0 z-10 bg-background border-b">
 				<div className="container flex items-center justify-between h-16 px-4 mx-auto">
 					<Link href="/" className="text-xl font-bold text-rose-600">
-						NextFilmes
+						NextFilm
 					</Link>
 					<div className="flex items-center gap-4">
 						<Button asChild variant="ghost" size="sm">
