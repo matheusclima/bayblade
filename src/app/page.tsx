@@ -10,12 +10,19 @@ import { Session } from "@/types/user";
 import PostsError from "@/components/post/error";
 import EmptyPosts from "@/components/post/empty";
 import { CreatePost } from "@/components/post/create";
+import { cookies } from "next/headers";
 import NavBar from "@/components/navBar";
 
 export default async function Home() {
   const trendingMovies = await getTrendingMoviesByPage(1);
   const { data } = await api.get<PaginatedPosts>("/posts");
-  const { data: session } = await api.get<Session | undefined>("auth/session");
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("nextfilm_access_token")?.value;
+  const { data: session } = await api.get<Session | undefined>("/auth/session", {
+    headers: {
+      Cookie: `nextfilm_access_token=${accessToken}`,
+    }
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -31,15 +38,15 @@ export default async function Home() {
                 <div className="flex items-center gap-3 mb-4">
                   <UserAvatar
                     user={{
-                      name: `${session.nome} ${session.sobrenome}`,
+                      name: `${session.user.nome} ${session.user.sobrenome}`,
                       image: "/placeholder.svg?height=48&width=48",
                     }}
                     className="w-12 h-12"
                   />
                   <div>
-                    <p className="font-medium">{`${session.nome} ${session.sobrenome}`}</p>
+                    <p className="font-medium">{`${session.user.nome} ${session.user.sobrenome}`}</p>
                     <p className="text-sm text-muted-foreground">
-                      @{session.usuario}
+                      @{session.user.usuario}
                     </p>
                   </div>
                 </div>

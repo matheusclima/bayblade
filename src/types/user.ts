@@ -7,9 +7,15 @@ export interface CookieUser {
   };
 
 export type Session = {
-  id: string;
-  nome: string;
-  sobrenome: string;
-  usuario: string;
-  email: string;
+  user: {
+    id: string;
+    nome: string;
+    sobrenome: string;
+    usuario: string;
+    email: string;
+    avatar?: string;
+    bio?: string;
+    cidade?: string;
+    createdAt: string;
+  }
 }
