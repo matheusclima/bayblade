@@ -113,6 +113,7 @@ export default function CreateReview({ ...props }: DialogProps) {
             <Button
               type="submit"
               className="bg-rose-500 hover:bg-rose-600 cursor-pointer"
+              disabled={!title || !review || rating === 0}
             >
               Publicar
             </Button>

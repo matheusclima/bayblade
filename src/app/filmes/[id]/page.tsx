@@ -1,9 +1,7 @@
 import { getMovieById, getMovieCredits, getMovieProviders } from "@/api/filmes";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserAvatar } from "@/components/ui/user-avatar";
-import { Bookmark, Heart, Share2, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as dotenv from "dotenv";
@@ -11,6 +9,7 @@ import MovieReviews from "./review";
 import { tmdbImageUrl } from "@/constants";
 import { cookies } from "next/headers";
 import CreateReview from "@/components/create-review";
+import NavBar from "@/components/navBar";
 dotenv.config();
 
 interface MoviePageProps {
@@ -34,28 +33,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-10 bg-background border-b">
-        <div className="container flex items-center justify-between h-16 px-4 mx-auto">
-          <Link href="/" className="text-xl font-bold text-rose-600">
-            NextFilm
-          </Link>
-          <div className="flex items-center gap-4">
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/">Início</Link>
-            </Button>
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/explorar">Explorar</Link>
-            </Button>
-            <UserAvatar
-              user={{
-                name: "Usuário",
-                image: "/placeholder.svg?height=32&width=32",
-              }}
-              className="w-8 h-8"
-            />
-          </div>
-        </div>
-      </header>
+      <NavBar />
 
       <main className="container px-4 py-6 mx-auto">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -93,17 +71,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
                         {genre.name}
                       </Button>
                     ))}
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button className="bg-rose-600 hover:bg-rose-700">
-                      <Heart className="w-4 h-4 mr-2" /> Favorito
-                    </Button>
-                    <Button variant="outline">
-                      <Bookmark className="w-4 h-4 mr-2" /> Salvar
-                    </Button>
-                    <Button variant="outline" className="col-span-2">
-                      <Share2 className="w-4 h-4 mr-2" /> Compartilhar
-                    </Button>
                   </div>
                 </div>
               </div>
@@ -198,25 +165,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
                 </div>
               </TabsContent>
             </Tabs>
-
-            <div className="p-4 mt-6 bg-card rounded-lg shadow">
-              <h3 className="mb-4 text-lg text-card-foreground font-semibold">
-                Deixe seu comentário
-              </h3>
-              <div className="flex gap-3">
-                <UserAvatar
-                  user={{
-                    name: "Você",
-                    image: "/placeholder.svg?height=40&width=40",
-                  }}
-                  className="w-10 h-10"
-                />
-                <div className="flex-1 space-y-3">
-                  <Input placeholder="O que você achou do filme?" />
-                  <Button>Comentar</Button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </main>

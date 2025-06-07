@@ -2,23 +2,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MovieCard } from "@/components/movie-card";
 import { UserAvatar } from "@/components/user-avatar";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { getTrendingMoviesByPage } from "@/api/filmes";
 import api from "@/api/api";
-import { PostType } from "@/types/post";
+import { PaginatedPosts } from "@/types/post";
 import Post from "@/components/post";
 import { Session } from "@/types/user";
 import PostsError from "@/components/post/error";
 import EmptyPosts from "@/components/post/empty";
 import { CreatePost } from "@/components/post/create";
+import NavBar from "@/components/navBar";
 
-type PaginatedPosts = {
-  posts: PostType[];
-  page: number;
-  limit: number;
-  hasNextPage: boolean;
-};
 export default async function Home() {
   const trendingMovies = await getTrendingMoviesByPage(1);
   const { data } = await api.get<PaginatedPosts>("/posts");
@@ -26,31 +19,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-10 bg-background border-b">
-        <div className="container flex items-center justify-between h-16 px-4 mx-auto">
-          <Link href="/" className="text-xl font-bold text-rose-600">
-            NextFilm
-          </Link>
-          <div className="relative w-full max-w-md mx-4">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Buscar filmes ou pessoas..." className="pl-8" />
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/perfil" className="cursor-pointer">
-              <UserAvatar
-                user={{
-                  name: session
-                    ? `${session?.nome} ${session?.sobrenome}`
-                    : "Tralarero Tralala",
-                  image: "/placeholder.svg?height=32&width=32",
-                }}
-                className="w-8 h-8"
-              />
-            </Link>
-          </div>
-        </div>
-      </header>
-
+      <NavBar />
       <main className="container grid grid-cols-1 gap-6 px-4 py-6 mx-auto md:grid-cols-3 lg:grid-cols-4">
         <div className="hidden md:block">
           <div className="sticky top-20 space-y-4">

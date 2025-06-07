@@ -23,43 +23,52 @@ export default async function MovieReviews({ id }: { id: number }) {
 
   return (
     <div className="space-y-6">
-      {reviews.map((review) => (
-        <div key={review.id} className="pb-4 border-b last:border-0 last:pb-0">
-          <div className="flex items-start gap-3 mb-2">
-            <UserAvatar
-              user={{
-                name: ` ${review.user.nome} ${review.user.sobrenome}`,
-                image: `/placeholder.svg?height=40&width=40`,
-              }}
-              className="w-10 h-10"
-            />
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">
-                    {review.user.nome} {review.user.sobrenome}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {getRelativeTime(new Date(review.createdAt))}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Rating
-                    value={review.avaliacao}
-                    readOnly
-                    className="text-muted-foreground"
-                  />
-                </div>
-              </div>
-              <h4 className="mt-2 mb-1 font-medium">{review.titulo}</h4>
-              <div
-                className="prose text-sm text-muted-foreground/90"
-                dangerouslySetInnerHTML={{ __html: review.descricao }}
+      {reviews.length === 0 ? (
+        <p className="text-sm text-muted-foreground text-center">
+          Seja o primeiro a avaliar
+        </p>
+      ) : (
+        reviews.map((review) => (
+          <div
+            key={review.id}
+            className="pb-4 border-b last:border-0 last:pb-0"
+          >
+            <div className="flex items-start gap-3 mb-2">
+              <UserAvatar
+                user={{
+                  name: ` ${review.user.nome} ${review.user.sobrenome}`,
+                  image: `/placeholder.svg?height=40&width=40`,
+                }}
+                className="w-10 h-10"
               />
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">
+                      {review.user.nome} {review.user.sobrenome}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {getRelativeTime(new Date(review.createdAt))}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Rating
+                      value={review.avaliacao}
+                      readOnly
+                      className="text-muted-foreground"
+                    />
+                  </div>
+                </div>
+                <h4 className="mt-2 mb-1 font-medium">{review.titulo}</h4>
+                <div
+                  className="prose text-sm text-muted-foreground/90"
+                  dangerouslySetInnerHTML={{ __html: review.descricao }}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }
