@@ -1,46 +1,61 @@
 "use client";
 
 import { UserAvatar } from "@/components/ui/user-avatar";
-import { cn, howManyDaysAgo } from "@/lib/utils";
+import { howManyDaysAgo } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { PostType } from "@/types/post";
-import { Heart } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { Trash } from "lucide-react";
 import api from "@/api/api";
-import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Post({ content }: { content: PostType }) {
-  const router = useRouter();
-  console.log(content)
-  const { mutate: toggleLike } = useMutation({
-    mutationFn: async (postId: string) => {
-      await api.post(`/posts/${postId}/like`);
-    },
-    onSuccess: () => {
-      router.refresh();
-    },
-    onError: (error) => {
-      console.error("Erro ao curtir/descurtir o post:", error);
-    },
-  });
+  async function handleDelete() {
+    const confirmed = confirm("Tem certeza que deseja deletar este post?");
+    if (!confirmed) return;
+
+    try {
+      const response = await api.delete(`/posts/${content.id}`);
+      if (response.status !== 204) {
+        toast.error("Erro ao deletar o post");
+        return;
+      }
+      toast.success("Post deletado com sucesso!");
+
+      // Atualize a UI — substitua por mutate(), router.refresh() ou outro método
+      window.location.reload(); // Solução simples
+    } catch (error) {
+      console.error("Erro ao deletar o post", error);
+      alert("Erro ao deletar o post");
+    }
+  }
   return (
     <div key={content.id} className="p-4 bg-card border rounded-lg shadow">
-      <div className="flex items-center gap-3 mb-4">
-        <UserAvatar
-          user={{
-            name: `${content.user.nome} ${content.user.sobrenome}`,
-            image: content.user.avatar ?? "/image/profile-placeholder.jpeg",
-          }}
-          className="w-10 h-10"
-        />
-        <div>
-          <p className="font-medium">{`${content.user.nome} ${content.user.sobrenome}`}</p>
-          <p className="text-xs text-muted-foreground">
-            Há {howManyDaysAgo(new Date(content.createdAt)) - 1} dia(s)
-          </p>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <UserAvatar
+            user={{
+              name: `${content.user.nome} ${content.user.sobrenome}`,
+              image: `/placeholder.svg?height=40&width=40`,
+            }}
+            className="w-10 h-10"
+          />
+          <div>
+            <p className="font-medium">{`${content.user.nome} ${content.user.sobrenome}`}</p>
+            <p className="text-xs text-muted-foreground">
+              Há {howManyDaysAgo(new Date(content.createdAt)) - 1} dia(s)
+            </p>
+          </div>
         </div>
+        {/* Botão de deletar */}
+        <button
+          onClick={handleDelete}
+          className="text-red-500 hover:text-red-700 cursor-pointer"
+          title="Deletar post"
+        >
+          <Trash className="w-5 h-5" />
+        </button>
       </div>
       <div className="mb-2">{content.content}</div>
       <div className="mb-4 overflow-hidden rounded-lg">
@@ -55,18 +70,8 @@ export default function Post({ content }: { content: PostType }) {
         )}
       </div>
       <div className="flex gap-4 mb-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => toggleLike(content.id)}
-        >
-          <Heart
-            className={cn(
-              "w-4 h-4 text-red-500",
-              content.isLiked ? "fill-red-500" : "fill-none",
-            )}
-          />{" "}
-          {content.likesCount} curtidas
+        <Button variant="ghost" size="sm">
+          ❤️ {content.likesCount} curtidas
         </Button>
         <Button variant="ghost" size="sm">
           💬 {content.commentsCount} comentários

@@ -1,4 +1,4 @@
-import { Film, MessageSquare } from "lucide-react";
+import { Building2, Film, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import api from "@/api/api";
 import { Session } from "@/types/user";
@@ -51,7 +51,7 @@ export default async function ProfilePage() {
               />
               <div className="flex flex-col">
                 <h1 className="text-2xl font-bold">{`${session.user.nome} ${session.user.sobrenome}`}</h1>
-                <p className="text-muted-foreground">{session.user.usuario}</p>
+                <p className="text-muted-foreground">@{session.user.usuario}</p>
               </div>
             </div>
 
@@ -69,9 +69,9 @@ export default async function ProfilePage() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4 text-gray-500" />
+                  <Building2 className="w-4 h-4 text-gray-500" />
                   <span className="text-sm">
-                    <strong>156</strong> comentários
+                    <strong>{session.user.cidade}</strong>
                   </span>
                 </div>
               </div>
