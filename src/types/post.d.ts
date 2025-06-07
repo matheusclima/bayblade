@@ -5,11 +5,13 @@ export type PostType = {
   likesCount: number;
   commentsCount: number;
   createdAt: string;
+  isLiked: boolean;
   user: {
     id: string;
     nome: string;
     sobrenome: string;
     usuario: string;
+    avatar?: string;
   };
 };
 

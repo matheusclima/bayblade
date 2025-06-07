@@ -2,8 +2,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import api from '@/api/api';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
@@ -90,12 +88,6 @@ export default function LoginPage() {
 								/>
 							</div>
 							<div className="flex items-center justify-between space-x-2">
-								<div className="flex items-center gap-2">
-									<Checkbox id="remember" />
-									<Label htmlFor="remember" className="text-sm">
-										Lembrar de mim
-									</Label>
-								</div>
 								<Link
 									href="/recuperar-senha"
 									className="text-sm text-rose-600 hover:underline"
@@ -112,7 +104,7 @@ export default function LoginPage() {
 						<p className="text-sm text-foreground">
 							Não tem uma conta?{' '}
 							<Link
-								href="/cadastro"
+								href="/auth/signup"
 								className="text-muted-foreground hover:underline"
 							>
 								Cadastre-se

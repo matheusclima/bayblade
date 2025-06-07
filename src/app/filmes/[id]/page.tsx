@@ -9,7 +9,7 @@ import MovieReviews from "./review";
 import { tmdbImageUrl } from "@/constants";
 import { cookies } from "next/headers";
 import CreateReview from "@/components/create-review";
-import NavBar from "@/components/navBar";
+import NavBar from "@/components/navigation";
 dotenv.config();
 
 interface MoviePageProps {

@@ -11,7 +11,7 @@ import { Genre, Movie } from "@/types/movie";
 import { getMovieGenres, getTrendingMoviesByPage } from "@/api/filmes";
 import { tmdbImageUrl } from "@/constants";
 import MovieList from "@/components/movie-list";
-import NavBar from "@/components/navBar";
+import NavBar from "@/components/navigation";
 import { UserAvatar } from "@/components/user-avatar";
 
 export default function ExplorePage() {
@@ -32,8 +32,6 @@ export default function ExplorePage() {
     getGenres();
     getMovies();
   }, []);
-
-  console.log("genres", genres);
 
   return (
     <div className="min-h-screen bg-background">

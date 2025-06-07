@@ -11,7 +11,7 @@ import PostsError from "@/components/post/error";
 import EmptyPosts from "@/components/post/empty";
 import { CreatePost } from "@/components/post/create";
 import { cookies } from "next/headers";
-import NavBar from "@/components/navBar";
+import NavBar from "@/components/navigation";
 
 export default async function Home() {
   const trendingMovies = await getTrendingMoviesByPage(1);
@@ -65,11 +65,6 @@ export default async function Home() {
                     <p className="text-xs text-muted-foreground">Seguindo</p>
                   </div>
                 </div>
-                <Link href="/perfil">
-                  <Button className="w-full mt-4 bg-rose-600 hover:bg-rose-700 cursor-pointer">
-                    Ver perfil
-                  </Button>
-                </Link>
               </div>
             ) : (
               <div className="p-4 bg-card border rounded-lg shadow text-center">

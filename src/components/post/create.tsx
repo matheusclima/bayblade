@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -92,11 +91,6 @@ export function CreatePost() {
       className="bg-backround text-white p-4 font-sans border border-gray-800 rounded-xl"
     >
       <div className="flex space-x-4">
-        <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="User Avatar" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-
         <div className="flex-1">
           {/* Seção da Pré-visualização da Imagem */}
           {imagePreview && (

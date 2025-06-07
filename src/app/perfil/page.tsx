@@ -4,7 +4,7 @@ import api from "@/api/api";
 import { Session } from "@/types/user";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import NavBar from "@/components/navBar";
+import NavBar from "@/components/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PostsError from "@/components/post/error";
 import EmptyPosts from "@/components/post/empty";

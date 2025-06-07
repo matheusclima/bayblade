@@ -1,20 +1,37 @@
 "use client";
 
 import { UserAvatar } from "@/components/ui/user-avatar";
-import { howManyDaysAgo } from "@/lib/utils";
+import { cn, howManyDaysAgo } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { PostType } from "@/types/post";
+import { Heart } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import api from "@/api/api";
+import { useRouter } from "next/navigation";
 
 export default function Post({ content }: { content: PostType }) {
+  const router = useRouter();
+  console.log(content)
+  const { mutate: toggleLike } = useMutation({
+    mutationFn: async (postId: string) => {
+      await api.post(`/posts/${postId}/like`);
+    },
+    onSuccess: () => {
+      router.refresh();
+    },
+    onError: (error) => {
+      console.error("Erro ao curtir/descurtir o post:", error);
+    },
+  });
   return (
     <div key={content.id} className="p-4 bg-card border rounded-lg shadow">
       <div className="flex items-center gap-3 mb-4">
         <UserAvatar
           user={{
             name: `${content.user.nome} ${content.user.sobrenome}`,
-            image: `/placeholder.svg?height=40&width=40`,
+            image: content.user.avatar ?? "/image/profile-placeholder.jpeg",
           }}
           className="w-10 h-10"
         />
@@ -38,8 +55,18 @@ export default function Post({ content }: { content: PostType }) {
         )}
       </div>
       <div className="flex gap-4 mb-4">
-        <Button variant="ghost" size="sm">
-          ❤️ {content.likesCount} curtidas
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => toggleLike(content.id)}
+        >
+          <Heart
+            className={cn(
+              "w-4 h-4 text-red-500",
+              content.isLiked ? "fill-red-500" : "fill-none",
+            )}
+          />{" "}
+          {content.likesCount} curtidas
         </Button>
         <Button variant="ghost" size="sm">
           💬 {content.commentsCount} comentários
