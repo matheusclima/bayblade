@@ -9,11 +9,29 @@ import { PostType } from "@/types/post";
 import { Trash } from "lucide-react";
 import api from "@/api/api";
 import { toast } from "sonner";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function Post({ content }: { content: PostType }) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const pathname = usePathname();
+
+  // Verifica se está na página de perfil
+  const isProfilePage = pathname?.includes("/perfil");
+
   async function handleDelete() {
-    const confirmed = confirm("Tem certeza que deseja deletar este post?");
-    if (!confirmed) return;
+    setIsDeleting(true);
 
     try {
       const response = await api.delete(`/posts/${content.id}`);
@@ -27,9 +45,12 @@ export default function Post({ content }: { content: PostType }) {
       window.location.reload(); // Solução simples
     } catch (error) {
       console.error("Erro ao deletar o post", error);
-      alert("Erro ao deletar o post");
+      toast.error("Erro ao deletar o post");
+    } finally {
+      setIsDeleting(false);
     }
   }
+
   return (
     <div key={content.id} className="p-4 bg-card border rounded-lg shadow">
       <div className="flex items-center justify-between mb-4">
@@ -48,15 +69,41 @@ export default function Post({ content }: { content: PostType }) {
             </p>
           </div>
         </div>
-        {/* Botão de deletar */}
-        <button
-          onClick={handleDelete}
-          className="text-red-500 hover:text-red-700 cursor-pointer"
-          title="Deletar post"
-        >
-          <Trash className="w-5 h-5" />
-        </button>
+
+        {/* Alert Dialog para confirmação de delete */}
+        {isProfilePage && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                className="text-red-500 hover:text-red-700 cursor-pointer transition-colors"
+                title="Deletar post"
+              >
+                <Trash className="w-5 h-5" />
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Tem certeza que deseja deletar este post? Esta ação não pode
+                  ser desfeita.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  {isDeleting ? "Deletando..." : "Deletar"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
+
       <div className="mb-2">{content.content}</div>
       <div className="mb-4 overflow-hidden rounded-lg">
         {content.imageUrl && (

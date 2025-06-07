@@ -38,33 +38,25 @@ export default async function Home() {
                 <h2 className="mb-4 text-lg text-card-foreg font-semibold">
                   Seu Perfil
                 </h2>
-                <div className="flex items-center gap-3 mb-4">
-                  <UserAvatar
-                    user={{
-                      name: `${session.user.nome} ${session.user.sobrenome}`,
-                      image:
-                        session.user.avatar ??
-                        "/image/profile-placeholder.jpeg",
-                    }}
-                    className="w-12 h-12"
-                  />
-                  <div>
-                    <p className="font-medium">{`${session.user.nome} ${session.user.sobrenome}`}</p>
-                    <p className="text-sm text-muted-foreground">
-                      @{session.user.usuario}
-                    </p>
+                <Link href="/perfil">
+                  <div className="flex items-center gap-3 mb-4">
+                    <UserAvatar
+                      user={{
+                        name: `${session.user.nome} ${session.user.sobrenome}`,
+                        image:
+                          session.user.avatar ??
+                          "/image/profile-placeholder.jpeg",
+                      }}
+                      className="w-12 h-12"
+                    />
+                    <div>
+                      <p className="font-medium">{`${session.user.nome} ${session.user.sobrenome}`}</p>
+                      <p className="text-sm text-muted-foreground">
+                        @{session.user.usuario}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-center">
-                  <div>
-                    <p className="font-medium">245</p>
-                    <p className="text-xs text-muted-foreground">Seguidores</p>
-                  </div>
-                  <div>
-                    <p className="font-medium">123</p>
-                    <p className="text-xs text-muted-foreground">Seguindo</p>
-                  </div>
-                </div>
+                </Link>
               </div>
             ) : (
               <div className="p-4 bg-card border rounded-lg shadow text-center">
