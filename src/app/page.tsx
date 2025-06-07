@@ -22,7 +22,6 @@ type PaginatedPosts = {
 export default async function Home() {
   const trendingMovies = await getTrendingMoviesByPage(1);
   const { data } = await api.get<PaginatedPosts>("/posts");
-  console.log(data)
   const { data: session } = await api.get<Session | undefined>("auth/session");
 
   return (
@@ -110,10 +109,8 @@ export default async function Home() {
           </div>
         </div>
 
-
-
         <div className="col-span-1 space-y-6 md:col-span-2">
-					<CreatePost />
+          <CreatePost />
           <div className="space-y-6">
             {!data ? (
               <PostsError message="Não foi possível carregar os posts" />
