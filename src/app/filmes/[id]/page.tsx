@@ -26,10 +26,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
 	const movieProviders = await getMovieProviders(id);
 	const cookieStore = await cookies();
 	const accessToken = cookieStore.get('nextfilm_access_token')?.value;
-
 	const director = movieCredits.crew.find(
 		(member) => member.job === 'Director'
 	);
+
+	console.log(movieInfo)
 
 	return (
 		<div className="min-h-screen bg-background">
