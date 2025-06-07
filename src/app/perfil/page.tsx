@@ -26,7 +26,7 @@ export default async function ProfilePage() {
 
   if (!session) redirect("/auth/signin");
 
-  const { data } = await api.get<PaginatedPosts>("/posts/", {
+  const { data } = await api.get<PaginatedPosts>("/posts/me", {
     headers: {
       Cookie: `nextfilm_access_token=${accessToken}`,
     },
@@ -71,11 +71,11 @@ export default async function ProfilePage() {
                 <div className="flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-gray-500" />
                   <span className="text-sm">
-                    <strong>{session.user.cidade}</strong>
+                    <strong>{session.user.cidade ?? "Hakuna Matata"}</strong>
                   </span>
                 </div>
               </div>
-              <div className="flex space-x-2 mt-4 sm:mt-0">
+              <div className="flex mt-4 sm:mt-0">
                 <EditProfile userData={session.user} />
               </div>
             </div>

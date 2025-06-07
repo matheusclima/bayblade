@@ -31,19 +31,15 @@ export default function CreateReview({ ...props }: DialogProps) {
 
     if (!movieId) return;
 
-    const formData = new FormData(e.currentTarget);
-    formData.append("descricao", review);
-    formData.append("avaliacao", rating.toString());
-    formData.append("curtidas", "0"); // valor inicial, ajuste se necessário
-    formData.append("user_id", "08489799-104a-4818-9eec-0fdd262e77c4"); // substitua pelo valor real
-    formData.append("filme_id", movieId);
+    const payload = {
+      titulo: title,
+      descricao: review,
+      avaliacao: rating,
+      filme_id: movieId,
+    };
 
     try {
-      const response = await api.post("/reviews", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await api.post("/reviews", payload);
 
       if (response.status !== 201) {
         throw new Error("Erro ao enviar post");

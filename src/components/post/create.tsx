@@ -73,6 +73,7 @@ export function CreatePost() {
       });
     },
     onSuccess: () => {
+      toast.success("Post criado com sucesso!");
       setContent("");
       setImagePreview(null);
       router.refresh();
