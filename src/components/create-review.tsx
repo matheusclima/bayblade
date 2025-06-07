@@ -1,28 +1,26 @@
-'use client';
+"use client";
 
-import { UploadIcon } from 'lucide-react';
-import { Button } from './ui/button';
+import { Button } from "./ui/button";
 import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from './ui/dialog';
-import { Label } from './ui/label';
-import { Input } from './ui/input';
-import { DialogProps } from '@radix-ui/react-dialog';
-import TextEditor from './ui/text-editor';
-import { useState, useRef } from 'react';
-import { Rating } from './ui/rating';
-import api from '@/api/api';
-import { useParams } from 'next/navigation';
-import { toast } from 'sonner';
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { DialogProps } from "@radix-ui/react-dialog";
+import TextEditor from "./ui/text-editor";
+import { useState, useRef } from "react";
+import { Rating } from "./ui/rating";
+import api from "@/api/api";
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
 
-export default function CreatePost({ ...props }: DialogProps) {
+export default function CreateReview({ ...props }: DialogProps) {
   const [title, setTitle] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
   const [rating, setRating] = useState<number>(0);
   const [review, setReview] = useState<string>("");
   const { id: movieId } = useParams<{ id: string }>();
@@ -34,16 +32,16 @@ export default function CreatePost({ ...props }: DialogProps) {
     if (!movieId) return;
 
     const formData = new FormData(e.currentTarget);
-    formData.append('descricao', review);
-    formData.append('avaliacao', rating.toString());
-    formData.append('curtidas', '0'); // valor inicial, ajuste se necessário
-    formData.append('user_id', '345ee6c1-a77a-43d5-a601-415eeb76cf75'); // substitua pelo valor real
-    formData.append('filme_id', movieId);
-    
+    formData.append("descricao", review);
+    formData.append("avaliacao", rating.toString());
+    formData.append("curtidas", "0"); // valor inicial, ajuste se necessário
+    formData.append("user_id", "08489799-104a-4818-9eec-0fdd262e77c4"); // substitua pelo valor real
+    formData.append("filme_id", movieId);
+
     try {
-      const response = await api.post('/posts', formData, {
+      const response = await api.post("/reviews", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -52,18 +50,15 @@ export default function CreatePost({ ...props }: DialogProps) {
       }
 
       toast.success("Avaliação publicada com sucesso!");
-      
+
       // Fechar o diálogo programaticamente clicando no botão de fechar
       if (closeButtonRef.current) {
         closeButtonRef.current.click();
       }
-      
-      // Reset do formulário
+
       setTitle("");
-      setFile(null);
       setRating(0);
       setReview("");
-      
     } catch (error) {
       console.error(error);
       toast.error("Erro ao publicar avaliação");
@@ -98,30 +93,6 @@ export default function CreatePost({ ...props }: DialogProps) {
                 onChange={(value) => setReview(value)}
               />
             </div>
-
-            <div className="grid gap-2">
-              <Label>Adicionar imagem (opcional)</Label>
-              <div className="h-[200px] my-4 relative border border-dashed rounded-md">
-                <Input
-                  type="file"
-                  accept="image/*"
-                  name="image"
-                  className="relative z-10 cursor-pointer h-full opacity-0"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                />
-                <div className="flex flex-col items-center text-center gap-2 w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none p-2">
-                  <UploadIcon className="w-8 h-8 opacity-50 mb-4" />
-                  <p className="text-sm">
-                    {file ? `Selecionado: ${file.name}` : "Importar imagem"}
-                  </p>
-                  <span className="text-sm">
-                    {file
-                      ? `Confirme se o arquivo está correto e clique em publicar.`
-                      : "Arraste ou clique aqui para importar uma imagem. O arquivo deve ter no máximo 5MB"}
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="grid gap-2 place-self-center">
@@ -135,11 +106,7 @@ export default function CreatePost({ ...props }: DialogProps) {
 
           <div className="flex justify-end space-x-2">
             <DialogClose asChild>
-              <Button
-                ref={closeButtonRef}
-                type="button"
-                variant="outline"
-              >
+              <Button ref={closeButtonRef} type="button" variant="outline">
                 Cancelar
               </Button>
             </DialogClose>
