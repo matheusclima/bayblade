@@ -54,21 +54,28 @@ export function CreatePost() {
 
   const { mutate: createPost, isPending } = useMutation({
     mutationFn: async (e: React.FormEvent<HTMLFormElement>) => {
-      console.log(e.target)
       e.preventDefault();
-      
-      if (content.trim() === "" && !imagePreview) {
+
+      if (content.trim() === "" && !fileInputRef.current?.files?.[0]) {
         throw new Error("Content or image must be provided");
       }
 
-      console.log("Creating post with content:", content, "and image:", imagePreview);
-      await api.post("/posts", { content }, {
+      const formData = new FormData();
+      formData.append("content", content); // isso é string, não há problema
+      if (fileInputRef.current?.files?.[0]) {
+        console.log("Uploading file:", fileInputRef.current.files[0]);
+        formData.append("image", fileInputRef.current.files[0]);
+      }
+
+      await api.post("/posts", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
     },
     onSuccess: () => {
+      setContent("");
+      setImagePreview(null);
       router.refresh();
     },
     onError: (error: Error) => {
@@ -80,7 +87,10 @@ export function CreatePost() {
   const isPostDisabled = content.trim().length === 0 && !imagePreview;
 
   return (
-    <form onSubmit={createPost} className="bg-backround text-white p-4 font-sans border border-gray-800 rounded-xl">
+    <form
+      onSubmit={createPost}
+      className="bg-backround text-white p-4 font-sans border border-gray-800 rounded-xl"
+    >
       <div className="flex space-x-4">
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" alt="User Avatar" />
@@ -99,6 +109,7 @@ export function CreatePost() {
                 height={300}
               />
               <Button
+                type="button"
                 variant="secondary"
                 size="icon"
                 className="absolute top-2 right-2 bg-black bg-opacity-75 hover:bg-opacity-100 rounded-full h-8 w-8"
@@ -123,6 +134,7 @@ export function CreatePost() {
             {/* Ícone para Upload de Imagem */}
             <div>
               <Button
+                type="button"
                 variant="ghost"
                 size="icon"
                 onClick={triggerFileSelect}
@@ -149,8 +161,12 @@ export function CreatePost() {
               >
                 {remainingChars}
               </span>
-              <Button type="submit" disabled={isPostDisabled}>
-                {!isPending ? <Loader2Icon className="animate-spin h-4 w-4" /> : "Postar"}
+              <Button type="submit" disabled={isPostDisabled || isPending}>
+                {isPending ? (
+                  <Loader2Icon className="animate-spin h-4 w-4" />
+                ) : (
+                  "Postar"
+                )}
               </Button>
             </div>
           </div>

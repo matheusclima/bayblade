@@ -25,7 +25,7 @@ export default function Post({ content }: { content: PostType }) {
           </p>
         </div>
       </div>
-      <div>{content.content}</div>
+      <div className="mb-2">{content.content}</div>
       <div className="mb-4 overflow-hidden rounded-lg">
         {content.imageUrl && (
           <Image
