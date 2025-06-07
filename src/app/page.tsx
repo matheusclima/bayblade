@@ -18,11 +18,14 @@ export default async function Home() {
   const { data } = await api.get<PaginatedPosts>("/posts");
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("nextfilm_access_token")?.value;
-  const { data: session } = await api.get<Session | undefined>("/auth/session", {
-    headers: {
-      Cookie: `nextfilm_access_token=${accessToken}`,
+  const { data: session } = await api.get<Session | undefined>(
+    "/auth/session",
+    {
+      headers: {
+        Cookie: `nextfilm_access_token=${accessToken}`,
+      },
     }
-  });
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -39,7 +42,9 @@ export default async function Home() {
                   <UserAvatar
                     user={{
                       name: `${session.user.nome} ${session.user.sobrenome}`,
-                      image: "/placeholder.svg?height=48&width=48",
+                      image:
+                        session.user.avatar ??
+                        "/image/profile-placeholder.jpeg",
                     }}
                     className="w-12 h-12"
                   />
