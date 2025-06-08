@@ -45,7 +45,7 @@ export default async function Home() {
                 <h2 className="mb-4 text-lg text-card-foreg font-semibold">
                   Seu Perfil
                 </h2>
-                <Link href="/perfil">
+                <Link href={`/perfil/${session.user.id}`}>
                   <div className="flex items-center gap-3 mb-4">
                     <UserAvatar
                       user={{

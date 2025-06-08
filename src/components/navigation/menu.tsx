@@ -1,4 +1,5 @@
 "use client";
+
 import { User } from "lucide-react";
 import {
   DropdownMenu,
@@ -10,12 +11,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import api from "@/api/api";
 import { useQuery } from "@tanstack/react-query";
+import { Session } from "@/types/user";
 
 export default function Menu() {
   const { data: session } = useQuery({
     queryKey: ["session"],
     queryFn: async () => {
-      const response = await api.get("/auth/session");
+      const response = await api.get<Session>("/auth/session");
       return response.data;
     },
     refetchOnWindowFocus: false,
@@ -35,7 +37,7 @@ export default function Menu() {
         {session ? (
           <>
             <DropdownMenuItem>
-              <Link href="/perfil" className="w-full">
+              <Link href={`/perfil/${session.user.id}`} className="w-full">
                 Meu Perfil
               </Link>
             </DropdownMenuItem>

@@ -1,8 +1,8 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 import { Building2, Film } from "lucide-react";
 import Image from "next/image";
 import api from "@/api/api";
-import { Session } from "@/types/user";
+import { Profile, Session } from "@/types/user";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import NavBar from "@/components/navigation";
@@ -12,8 +12,14 @@ import EmptyPosts from "@/components/post/empty";
 import Post from "@/components/post";
 import { PaginatedPosts } from "@/types/post";
 import EditProfile from "@/components/user/edit-profile";
+import { Button } from "@/components/ui/button";
 
-export default async function ProfilePage() {
+export default async function ProfilePage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const { id } = params;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("nextfilm_access_token")?.value;
   const { data: session } = await api.get<Session | undefined>(
@@ -27,11 +33,13 @@ export default async function ProfilePage() {
 
   if (!session) redirect("/auth/signin");
 
-  const { data } = await api.get<PaginatedPosts>("/posts/me", {
+  const { data } = await api.get<PaginatedPosts>(`/posts/users/${id}`, {
     headers: {
       Cookie: `nextfilm_access_token=${accessToken}`,
     },
   });
+
+  const { data: profile } = await api.get<Profile>(`/users/${id}`);
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,15 +52,15 @@ export default async function ProfilePage() {
             {/* Avatar + nome lado a lado */}
             <div className="flex items-center gap-4">
               <Image
-                src={session.user.avatar ?? "/image/profile-placeholder.jpeg"}
-                alt={session.user.nome}
+                src={profile.avatar ?? "/image/profile-placeholder.jpeg"}
+                alt={profile.nome}
                 width={128}
                 height={128}
                 className="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-background object-cover"
               />
               <div className="flex flex-col">
-                <h1 className="text-2xl font-bold">{`${session.user.nome} ${session.user.sobrenome}`}</h1>
-                <p className="text-muted-foreground">@{session.user.usuario}</p>
+                <h1 className="text-2xl font-bold">{`${profile.nome} ${profile.sobrenome}`}</h1>
+                <p className="text-muted-foreground">@{profile.usuario}</p>
               </div>
             </div>
 
@@ -60,7 +68,7 @@ export default async function ProfilePage() {
             <div className="p-4 bg-background rounded-lg shadow">
               <h2 className="mb-4 text-lg font-semibold">Sobre</h2>
               <p className="mb-4 text-sm text-gray-600">
-                {session.user.bio || "Sem bio"}
+                {profile.bio || "Sem bio"}
               </p>
               <div className="py-2 border-t">
                 <div className="flex items-center gap-2 mb-2">
@@ -72,12 +80,21 @@ export default async function ProfilePage() {
                 <div className="flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-gray-500" />
                   <span className="text-sm">
-                    <strong>{session.user.cidade ?? "Hakuna Matata"}</strong>
+                    <strong>{profile.cidade ?? "Hakuna Matata"}</strong>
                   </span>
                 </div>
               </div>
               <div className="flex mt-4 sm:mt-0">
-                <EditProfile userData={session.user} />
+                {session.user.id === id ? (
+                  <EditProfile userData={profile} />
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="w-full bg-rose-600 hover:bg-rose-700 cursor-pointer"
+                  >
+                    Seguir
+                  </Button>
+                )}
               </div>
             </div>
           </div>

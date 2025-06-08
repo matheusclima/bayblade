@@ -6,10 +6,10 @@ import { MessageSquareIcon } from "lucide-react";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { AxiosError } from "axios";
 import api from "@/api/api";
-import type { Comment } from "@/types/post";
 import { toast } from "sonner";
 import CreateComment from "./create";
 import CommentItem from "./item";
+import { PostType } from "@/types/post";
 
 export default function Comments({ postId }: { postId: number }) {
   const queryClient = useQueryClient();
@@ -31,10 +31,10 @@ export default function Comments({ postId }: { postId: number }) {
     },
   });
 
-  const { data: comments } = useQuery({
+  const { data: post } = useQuery({
     queryKey: ["post", postId],
     queryFn: async () => {
-      const { data } = await api.get<Comment[]>(`/posts/${postId}/comments`);
+      const { data } = await api.get<PostType>(`/posts/${postId}/comments`);
       return data;
     },
   });
@@ -43,7 +43,7 @@ export default function Comments({ postId }: { postId: number }) {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm">
-          💬 {comments?.length ?? 0} comentários
+          💬 {post?.comments.length ?? 0} comentários
         </Button>
       </DialogTrigger>
       <DialogContent className="!max-w-4xl">
@@ -52,7 +52,7 @@ export default function Comments({ postId }: { postId: number }) {
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2 text-lg">
               <MessageSquareIcon className="w-5 h-5 text-blue-600" />
-              Comentários ({comments?.length})
+              Comentários ({post?.commentsCount ?? 0})
             </CardTitle>
           </CardHeader>
 
@@ -62,9 +62,9 @@ export default function Comments({ postId }: { postId: number }) {
               isSubmitting={isPending}
             />
 
-            {comments && comments.length > 0 ? (
+            {post?.comments && post.comments.length > 0 ? (
               <div className="space-y-2 rounded-lg overflow-y-auto h-[200px] scrollbar-hidden">
-                {comments.map((comment) => (
+                {post.comments.map((comment) => (
                   <CommentItem
                     key={comment.id}
                     id={comment.id}

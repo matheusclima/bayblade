@@ -26,6 +26,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import Comments from "../comments";
+import Link from "next/link";
 
 // Componente animável para o coração
 const MotionHeart = motion.create(Heart);
@@ -89,7 +90,10 @@ export default function Post({ content }: { content: PostType }) {
             className="w-10 h-10"
           />
           <div>
-            <p className="font-medium">{`${content.user.nome} ${content.user.sobrenome}`}</p>
+            <Link
+              href={`/perfil/${content.user.id}`}
+              className="font-medium hover:underline"
+            >{`${content.user.nome} ${content.user.sobrenome}`}</Link>
             <p className="text-xs text-muted-foreground">
               Há {howManyDaysAgo(new Date(content.createdAt))} dia(s)
             </p>
