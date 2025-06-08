@@ -3,17 +3,17 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { MessageSquareIcon } from "lucide-react";
-import Comment from "./item";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { AxiosError } from "axios";
 import api from "@/api/api";
-import { PostType } from "@/types/post";
+import type { Comment } from "@/types/post";
 import { toast } from "sonner";
 import CreateComment from "./create";
+import CommentItem from "./item";
 
 export default function Comments({ postId }: { postId: number }) {
   const queryClient = useQueryClient();
-  
+
   const { mutate: addCommentMutation, isPending } = useMutation({
     mutationFn: async (comment: string) => {
       await api.post(`/posts/${postId}/comment`, {
@@ -31,10 +31,10 @@ export default function Comments({ postId }: { postId: number }) {
     },
   });
 
-  const { data: post } = useQuery({
+  const { data: comments } = useQuery({
     queryKey: ["post", postId],
     queryFn: async () => {
-      const { data } = await api.get<PostType>(`/posts/${postId}/comments`);
+      const { data } = await api.get<Comment[]>(`/posts/${postId}/comments`);
       return data;
     },
   });
@@ -43,7 +43,7 @@ export default function Comments({ postId }: { postId: number }) {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm">
-          💬 {post?.comments.length ?? 0} comentários
+          💬 {comments?.length ?? 0} comentários
         </Button>
       </DialogTrigger>
       <DialogContent className="!max-w-4xl">
@@ -52,17 +52,20 @@ export default function Comments({ postId }: { postId: number }) {
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2 text-lg">
               <MessageSquareIcon className="w-5 h-5 text-blue-600" />
-              Comentários ({post?.comments.length})
+              Comentários ({comments?.length})
             </CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <CreateComment onSubmit={addCommentMutation} isSubmitting={isPending} />
+            <CreateComment
+              onSubmit={addCommentMutation}
+              isSubmitting={isPending}
+            />
 
-            {post?.comments && post.comments.length > 0 ? (
+            {comments && comments.length > 0 ? (
               <div className="space-y-2 rounded-lg overflow-y-auto h-[200px] scrollbar-hidden">
-                {post.comments.map((comment) => (
-                  <Comment
+                {comments.map((comment) => (
+                  <CommentItem
                     key={comment.id}
                     id={comment.id}
                     author={comment.user}
