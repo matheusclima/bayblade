@@ -14,7 +14,6 @@ import { howManyDaysAgo } from "@/lib/utils";
 
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,9 +25,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import Comments from "../comments";
 
 // Componente animável para o coração
-const MotionHeart = motion(Heart);
+const MotionHeart = motion.create(Heart);
 
 export default function Post({ content }: { content: PostType }) {
   // --- HOOKS E ESTADOS ---
@@ -41,14 +41,18 @@ export default function Post({ content }: { content: PostType }) {
 
   // Lógica para o LIKE OTIMISTA
   const [optimisticIsLiked, setOptimisticIsLiked] = useState(content.isLiked);
-  const [optimisticLikesCount, setOptimisticLikesCount] = useState(content.likesCount);
+  const [optimisticLikesCount, setOptimisticLikesCount] = useState(
+    content.likesCount
+  );
 
   // --- FUNÇÕES E MUTAÇÕES ---
   const { mutate: toggleLike } = useMutation({
-    mutationFn: (postId: string) => api.post(`/posts/${postId}/like`),
+    mutationFn: (postId: number) => api.post(`/posts/${postId}/like`),
     onMutate: () => {
       setOptimisticIsLiked((prev) => !prev);
-      setOptimisticLikesCount((prev) => (optimisticIsLiked ? prev - 1 : prev + 1));
+      setOptimisticLikesCount((prev) =>
+        optimisticIsLiked ? prev - 1 : prev + 1
+      );
     },
     onError: () => {
       // Reverte a UI em caso de erro na API
@@ -152,31 +156,28 @@ export default function Post({ content }: { content: PostType }) {
           <MotionHeart
             animate={optimisticIsLiked ? "liked" : "unliked"}
             variants={{
-              unliked: { fill: 'rgba(239, 68, 68, 0)', stroke: 'rgb(239 68 68)', scale: 1 },
-              liked: { fill: 'rgb(239 68 68)', stroke: 'rgb(239 68 68)', scale: 1.2 },
+              unliked: {
+                fill: "rgba(239, 68, 68, 0)",
+                stroke: "rgb(239 68 68)",
+                scale: 1,
+              },
+              liked: {
+                fill: "rgb(239 68 68)",
+                stroke: "rgb(239 68 68)",
+                scale: 1.2,
+              },
             }}
-            transition={{ duration: 0.3, type: "spring", stiffness: 400, damping: 10 }}
+            transition={{
+              duration: 0.3,
+              type: "spring",
+              stiffness: 400,
+              damping: 10,
+            }}
             className="w-4 h-4 mr-2"
           />
           {optimisticLikesCount} curtidas
         </Button>
-        <Button variant="ghost" size="sm">
-          💬 {content.commentsCount} comentários
-        </Button>
-      </div>
-
-      {/* Seção de comentários */}
-      <div className="pt-4 mt-4 border-t">
-        <div className="flex gap-2">
-          <UserAvatar
-            user={{
-              name: "Você",
-              image: "/image/profile-placeholder.jpeg",
-            }}
-            className="w-8 h-8"
-          />
-          <Input placeholder="Escreva um comentário..." className="flex-1" />
-        </div>
+        <Comments postId={content.id} />
       </div>
     </div>
   );

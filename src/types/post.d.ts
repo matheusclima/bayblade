@@ -1,9 +1,10 @@
 export type PostType = {
-  id: string;
+  id: number;
   content: string;
   imageUrl?: string;
   likesCount: number;
   commentsCount: number;
+  comments: Comment[];
   createdAt: string;
   isLiked: boolean;
   user: {
@@ -14,6 +15,18 @@ export type PostType = {
     avatar?: string;
   };
 };
+
+export type Comment = {
+  id: number;
+  descricao: string;
+  createdAt: string;
+  user: {
+    id: string;
+    nome: string;
+    sobrenome: string;
+    avatar?: string;
+  };
+}
 
 export type ReviewType = {
   id: string;
