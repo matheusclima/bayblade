@@ -8,6 +8,7 @@ export type Profile = {
   bio?: string;
   cidade?: string;
   createdAt: string;
+  isFollowing?: boolean;
 }
 
 export type Session = {

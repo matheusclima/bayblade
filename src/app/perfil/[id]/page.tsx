@@ -19,7 +19,7 @@ export default async function ProfilePage({
 }: {
   params: { id: string };
 }) {
-  const { id } = params;
+  const { id } = await params;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("nextfilm_access_token")?.value;
   const { data: session } = await api.get<Session | undefined>(
@@ -39,7 +39,11 @@ export default async function ProfilePage({
     },
   });
 
-  const { data: profile } = await api.get<Profile>(`/users/${id}`);
+  const { data: profile } = await api.get<Profile>(`/users/${id}`, {
+    headers: {
+      Cookie: `nextfilm_access_token=${accessToken}`,
+    },
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -88,7 +92,7 @@ export default async function ProfilePage({
                 {session.user.id === id ? (
                   <EditProfile userData={profile} />
                 ) : (
-                  <FollowUser isFollowing={false} />
+                  <FollowUser isFollowing={profile.isFollowing ?? false} profileId={profile.id} />
                 )}
               </div>
             </div>
