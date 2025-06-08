@@ -1,4 +1,5 @@
-import { Building2, Film, MessageSquare } from "lucide-react";
+export const dynamic = 'force-dynamic';
+import { Building2, Film } from "lucide-react";
 import Image from "next/image";
 import api from "@/api/api";
 import { Session } from "@/types/user";

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MovieCard } from "@/components/movie-card";
@@ -15,9 +16,15 @@ import NavBar from "@/components/navigation";
 
 export default async function Home() {
   const trendingMovies = await getTrendingMoviesByPage(1);
-  const { data } = await api.get<PaginatedPosts>("/posts");
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("nextfilm_access_token")?.value;
+
+  const { data } = await api.get<PaginatedPosts>("/posts", {
+    headers: {
+      Cookie: `nextfilm_access_token=${accessToken}`,
+    }
+  });
+  
   const { data: session } = await api.get<Session | undefined>(
     "/auth/session",
     {

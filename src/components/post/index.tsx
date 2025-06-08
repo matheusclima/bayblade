@@ -1,16 +1,20 @@
 "use client";
 
-import { UserAvatar } from "@/components/ui/user-avatar";
-import { howManyDaysAgo } from "@/lib/utils";
-import Image from "next/image";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { PostType } from "@/types/post";
-import { Trash } from "lucide-react";
-import api from "@/api/api";
-import { toast } from "sonner";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { Heart, Trash } from "lucide-react";
+import { toast } from "sonner";
+
+import { PostType } from "@/types/post";
+import api from "@/api/api";
+import { howManyDaysAgo } from "@/lib/utils";
+
+import { UserAvatar } from "@/components/ui/user-avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,29 +27,46 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+// Componente animável para o coração
+const MotionHeart = motion(Heart);
+
 export default function Post({ content }: { content: PostType }) {
-  const [isDeleting, setIsDeleting] = useState(false);
+  // --- HOOKS E ESTADOS ---
+  const router = useRouter();
   const pathname = usePathname();
 
-  // Verifica se está na página de perfil
+  // Lógica para DELETAR o post
+  const [isDeleting, setIsDeleting] = useState(false);
   const isProfilePage = pathname?.includes("/perfil");
+
+  // Lógica para o LIKE OTIMISTA
+  const [optimisticIsLiked, setOptimisticIsLiked] = useState(content.isLiked);
+  const [optimisticLikesCount, setOptimisticLikesCount] = useState(content.likesCount);
+
+  // --- FUNÇÕES E MUTAÇÕES ---
+  const { mutate: toggleLike } = useMutation({
+    mutationFn: (postId: string) => api.post(`/posts/${postId}/like`),
+    onMutate: () => {
+      setOptimisticIsLiked((prev) => !prev);
+      setOptimisticLikesCount((prev) => (optimisticIsLiked ? prev - 1 : prev + 1));
+    },
+    onError: () => {
+      // Reverte a UI em caso de erro na API
+      setOptimisticIsLiked(content.isLiked);
+      setOptimisticLikesCount(content.likesCount);
+      toast.error("Não foi possível processar a curtida.");
+    },
+  });
 
   async function handleDelete() {
     setIsDeleting(true);
-
     try {
-      const response = await api.delete(`/posts/${content.id}`);
-      if (response.status !== 204) {
-        toast.error("Erro ao deletar o post");
-        return;
-      }
+      await api.delete(`/posts/${content.id}`);
       toast.success("Post deletado com sucesso!");
-
-      // Atualize a UI — substitua por mutate(), router.refresh() ou outro método
-      window.location.reload(); // Solução simples
+      router.refresh();
     } catch (error) {
       console.error("Erro ao deletar o post", error);
-      toast.error("Erro ao deletar o post");
+      toast.error("Falha ao deletar o post.");
     } finally {
       setIsDeleting(false);
     }
@@ -54,28 +75,29 @@ export default function Post({ content }: { content: PostType }) {
   return (
     <div key={content.id} className="p-4 bg-card border rounded-lg shadow">
       <div className="flex items-center justify-between mb-4">
+        {/* Informações do usuário */}
         <div className="flex items-center gap-3">
           <UserAvatar
             user={{
               name: `${content.user.nome} ${content.user.sobrenome}`,
-              image: `/placeholder.svg?height=40&width=40`,
+              image: content.user.avatar ?? "/image/profile-placeholder.jpeg",
             }}
             className="w-10 h-10"
           />
           <div>
             <p className="font-medium">{`${content.user.nome} ${content.user.sobrenome}`}</p>
             <p className="text-xs text-muted-foreground">
-              Há {howManyDaysAgo(new Date(content.createdAt)) - 1} dia(s)
+              Há {howManyDaysAgo(new Date(content.createdAt))} dia(s)
             </p>
           </div>
         </div>
 
-        {/* Alert Dialog para confirmação de delete */}
+        {/* Botão de deletar condicional */}
         {isProfilePage && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <button
-                className="text-red-500 hover:text-red-700 cursor-pointer transition-colors"
+                className="p-1 text-muted-foreground hover:text-red-600 cursor-pointer transition-colors"
                 title="Deletar post"
               >
                 <Trash className="w-5 h-5" />
@@ -104,52 +126,52 @@ export default function Post({ content }: { content: PostType }) {
         )}
       </div>
 
-      <div className="mb-2">{content.content}</div>
-      <div className="mb-4 overflow-hidden rounded-lg">
-        {content.imageUrl && (
+      <div className="mb-2 whitespace-pre-wrap">{content.content}</div>
+
+      {/* Imagem do post */}
+      {content.imageUrl && (
+        <div className="mb-4 overflow-hidden rounded-lg">
           <Image
             src={content.imageUrl}
             alt="Cena do filme"
-            className="object-cover w-full h-64"
+            className="object-cover w-full h-auto"
             width={600}
-            height={300}
+            height={400}
           />
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Barra de ações */}
       <div className="flex gap-4 mb-4">
-        <Button variant="ghost" size="sm">
-          ❤️ {content.likesCount} curtidas
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => toggleLike(content.id)}
+          className="flex items-center"
+        >
+          <MotionHeart
+            animate={optimisticIsLiked ? "liked" : "unliked"}
+            variants={{
+              unliked: { fill: 'rgba(239, 68, 68, 0)', stroke: 'rgb(239 68 68)', scale: 1 },
+              liked: { fill: 'rgb(239 68 68)', stroke: 'rgb(239 68 68)', scale: 1.2 },
+            }}
+            transition={{ duration: 0.3, type: "spring", stiffness: 400, damping: 10 }}
+            className="w-4 h-4 mr-2"
+          />
+          {optimisticLikesCount} curtidas
         </Button>
         <Button variant="ghost" size="sm">
           💬 {content.commentsCount} comentários
         </Button>
       </div>
+
+      {/* Seção de comentários */}
       <div className="pt-4 mt-4 border-t">
-        <div className="mb-4 space-y-4">
-          <div className="flex gap-2">
-            <UserAvatar
-              user={{
-                name: "Comentarista",
-                image: "/placeholder.svg?height=32&width=32",
-              }}
-              className="w-8 h-8"
-            />
-            <div className="flex-1 p-2 bg-muted rounded-lg">
-              <p className="text-sm text-muted-foreground font-medium">
-                Ana Souza
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Concordo totalmente! A trilha sonora do Hans Zimmer é
-                simplesmente perfeita.
-              </p>
-            </div>
-          </div>
-        </div>
         <div className="flex gap-2">
           <UserAvatar
             user={{
               name: "Você",
-              image: "/placeholder.svg?height=32&width=32",
+              image: "/image/profile-placeholder.jpeg",
             }}
             className="w-8 h-8"
           />
