@@ -10,6 +10,7 @@ import { tmdbImageUrl } from "@/constants";
 import { cookies } from "next/headers";
 import CreateReview from "@/components/create-review";
 import NavBar from "@/components/navigation";
+import api from "@/api/api";
 dotenv.config();
 
 interface MoviePageProps {
@@ -18,8 +19,13 @@ interface MoviePageProps {
   };
 }
 
+type Ratings = {
+  averageRating: number;
+  totalReviews: number;
+}
+
 export default async function MoviePage({ params }: MoviePageProps) {
-  const { id } = await params;
+  const { id } = params;
   const movieInfo = await getMovieById(id);
   const movieCredits = await getMovieCredits(id);
   const movieProviders = await getMovieProviders(id);
@@ -29,7 +35,9 @@ export default async function MoviePage({ params }: MoviePageProps) {
     (member) => member.job === "Director"
   );
 
-  console.log(movieInfo);
+  console.log("Movie Id:", id);
+  const { data: movieReviews } = await api.get<Ratings>(`/reviews/movies/${id}/rating`)
+  console.log("Movie Ratings:", movieReviews);
 
   return (
     <div className="min-h-screen bg-background">
@@ -51,9 +59,9 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-1">
                       <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-                      <span className="font-bold">4.8</span>
+                      <span className="font-bold">{movieReviews.averageRating}</span>
                       <span className="text-sm text-muted-foreground">
-                        /5 (2.4k votos)
+                        /5 ({movieReviews.totalReviews} votos)
                       </span>
                     </div>
                     <div className="text-sm text-muted-foreground">
@@ -116,7 +124,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   Avaliações
                 </TabsTrigger>
                 <TabsTrigger value="onde-assistir" className="flex-1">
-                  Onde Assistir
+                  Onde Assistirera 
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="reviews" className="space-y-6">

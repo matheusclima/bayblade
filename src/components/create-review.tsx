@@ -16,10 +16,11 @@ import TextEditor from "./ui/text-editor";
 import { useState, useRef } from "react";
 import { Rating } from "./ui/rating";
 import api from "@/api/api";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function CreateReview({ ...props }: DialogProps) {
+  const router = useRouter();
   const [title, setTitle] = useState<string>("");
   const [rating, setRating] = useState<number>(0);
   const [review, setReview] = useState<string>("");
@@ -46,15 +47,15 @@ export default function CreateReview({ ...props }: DialogProps) {
       }
 
       toast.success("Avaliação publicada com sucesso!");
-
       // Fechar o diálogo programaticamente clicando no botão de fechar
       if (closeButtonRef.current) {
         closeButtonRef.current.click();
       }
-
+      
       setTitle("");
       setRating(0);
       setReview("");
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast.error("Erro ao publicar avaliação");

@@ -12,7 +12,7 @@ import EmptyPosts from "@/components/post/empty";
 import Post from "@/components/post";
 import { PaginatedPosts } from "@/types/post";
 import EditProfile from "@/components/user/edit-profile";
-import { Button } from "@/components/ui/button";
+import FollowUser from "@/components/follow";
 
 export default async function ProfilePage({
   params,
@@ -88,12 +88,7 @@ export default async function ProfilePage({
                 {session.user.id === id ? (
                   <EditProfile userData={profile} />
                 ) : (
-                  <Button
-                    variant="outline"
-                    className="w-full bg-rose-600 hover:bg-rose-700 cursor-pointer"
-                  >
-                    Seguir
-                  </Button>
+                  <FollowUser isFollowing={false} />
                 )}
               </div>
             </div>

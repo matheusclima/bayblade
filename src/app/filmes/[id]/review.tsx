@@ -22,7 +22,7 @@ export default async function MovieReviews({ id }: { id: number }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-h-[200px] overflow-y-auto scrollbar-hidden">
       {reviews.length === 0 ? (
         <p className="text-sm text-muted-foreground text-center">
           Seja o primeiro a avaliar
